@@ -50,7 +50,12 @@ for rpm in "$RPMDIR"/*.rpm; do
         continue
     fi
     rel=${fc#fc}
-    arch=$(basename "$rpm" | rev | cut -d. -f2 | rev)
+    # The arch is the last dot-field before .rpm. Done with parameter expansion
+    # rather than "rev | cut": rev lives in util-linux, which a minimal Fedora
+    # container does not have, and its absence took this script out with
+    # "command not found" after everything else had already worked.
+    base=$(basename "$rpm"); base=${base%.rpm}
+    arch=${base##*.}
     mkdir -p "$SITEDIR/fedora/$rel/$arch"
     cp "$rpm" "$SITEDIR/fedora/$rel/$arch/"
     releases[$rel]=1
