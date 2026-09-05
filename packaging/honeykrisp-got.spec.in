@@ -162,7 +162,9 @@ sed -e 's|%%LIBDIR%%|%{_libdir}|g' \
     %{SOURCE1} > honeykrisp-got.tool
 install -D -m 0755 honeykrisp-got.tool %{buildroot}%{_bindir}/honeykrisp-got
 
-install -D -m 0644 %{SOURCE3} %{buildroot}%{_docdir}/%{name}/README.md
+# %%doc copies from the build directory, so put it where rpm looks.
+cp -a %{SOURCE3} README.honeykrisp-got.md
+
 install -d -m 0755 %{buildroot}%{_localstatedir}/lib/%{name}
 
 %check
@@ -187,9 +189,16 @@ if [ $1 -eq 0 ]; then
     %{_bindir}/honeykrisp-got disable --quiet || :
 fi
 
+%postun
+# The backup is only meaningful while this package exists. Leaving it behind
+# would put an unowned 20 MB file in %{_libdir} that nothing ever cleans up.
+if [ $1 -eq 0 ]; then
+    rm -f %{_libdir}/libvulkan_asahi.so.honeykrisp-got-backup
+fi
+
 %files
 %license licenses/MIT
-%doc %{_docdir}/%{name}/README.md
+%doc README.honeykrisp-got.md
 %{_bindir}/honeykrisp-got
 %dir %{privdir}
 %{privdir}/libvulkan_asahi.so
@@ -197,6 +206,7 @@ fi
 %{_datadir}/honeykrisp-got/asahi_icd.aarch64.json
 %{_datadir}/honeykrisp-got/drirc-hk-vkd3d.conf
 %dir %{_localstatedir}/lib/%{name}
+%ghost %{_localstatedir}/lib/%{name}/enabled
 
 %changelog
 * @RPMDATE@ got-bringup CI <noreply@github.com> - @MESA_VERSION@~devel-1.@SNAPDATE@git@MESA_SHORT@

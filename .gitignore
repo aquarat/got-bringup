@@ -54,3 +54,8 @@ fex/GuestThunks/*.so
 *.bak
 *.bak-*
 *.backup-*
+
+# Packaging output. Both are rebuilt from mesa-source.env and the spec; neither
+# is worth 40 MB of git history.
+out/
+packaging/srpm/
