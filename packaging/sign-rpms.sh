@@ -69,19 +69,43 @@ rpms=("$DIR"/*.rpm)
 
 rpmsign "${SIGN_ARGS[@]}" --addsign "${rpms[@]}"
 
-# rpmsign can return 0 having signed nothing at all, depending on version and
-# how the key was rejected. Verify, package by package, that a signature is
-# actually there.
-fail=0
-for r in "${rpms[@]}"; do
-    if rpm -qp --qf '%{SIGPGP:pgpsig}%{SIGGPG:pgpsig}\n' "$r" 2>/dev/null | grep -q 'Key ID'; then
-        echo "$PROG: signed $(basename "$r")"
-    else
-        echo "$PROG: NOT SIGNED: $(basename "$r")" >&2
-        fail=1
-    fi
-done
-[ "$fail" = 0 ] || exit 1
-
 gpg --batch --armor --export "$KEYID" > "$DIR/RPM-GPG-KEY-honeykrisp-got"
 echo "$PROG: public key -> $DIR/RPM-GPG-KEY-honeykrisp-got"
+
+# rpmsign can return 0 having signed nothing at all, depending on version and
+# how the key was rejected, so every package is checked individually.
+#
+# Read the Signature line out of "rpm -qi" rather than querying signature tags
+# directly. The tags are not stable across rpm versions -- rpm 6 (Fedora 44) no
+# longer fills in the legacy V3 %{SIGPGP}/%{SIGGPG} pair that rpm 4 used, so
+# querying those reports a perfectly good package as unsigned. The Signature
+# line is derived from whichever tag the running rpm actually populates, and is
+# what a user inspecting the package would look at.
+#
+# Where the keyring can be written -- i.e. as root, which is the case in CI --
+# go further and check the signature VERIFIES against the key we just exported,
+# not merely that some signature is present.
+verify=0
+if rpm --import "$DIR/RPM-GPG-KEY-honeykrisp-got" 2>/dev/null; then
+    verify=1
+else
+    echo "$PROG: cannot write the rpm keyring; checking signatures are present, not that they verify"
+fi
+
+fail=0
+for r in "${rpms[@]}"; do
+    sig=$(rpm -qpi "$r" 2>/dev/null | sed -n 's/^Signature *: *//p')
+    if [ -z "$sig" ] || [ "$sig" = "(none)" ]; then
+        echo "$PROG: NOT SIGNED: $(basename "$r")" >&2
+        fail=1
+        continue
+    fi
+    if [ "$verify" = 1 ] && ! rpm --checksig "$r" 2>&1 | grep -q 'signatures OK'; then
+        echo "$PROG: SIGNATURE DOES NOT VERIFY: $(basename "$r")" >&2
+        rpm --checksig -v "$r" 2>&1 | sed "s/^/$PROG:   /" >&2
+        fail=1
+        continue
+    fi
+    echo "$PROG: signed $(basename "$r")  [$sig]"
+done
+[ "$fail" = 0 ] || exit 1
