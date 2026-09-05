@@ -1,0 +1,16 @@
+#version 450
+#extension GL_KHR_shader_subgroup_ballot : require
+layout(local_size_x = 32) in;
+layout(set = 0, binding = 0) buffer B { uint data[]; };
+layout(push_constant) uniform P { uint loops; uint stride; } pc;
+/* subgroupBroadcastFirst of a value loaded from a lane-uniform address. The
+   load is uniform, so the broadcast is a no-op and nir_opt_uniform_subgroup
+   should delete it -- which it could not while load_agx was marked
+   unconditionally divergent. */
+void main() {
+   uint uniform_idx = subgroupBroadcastFirst(data[0]);
+   uint acc = 0;
+   for (uint k = 0; k < pc.loops; ++k)
+      acc += data[(uniform_idx + k) & 0xffffu];
+   data[gl_GlobalInvocationID.x & 0xffffu] = acc;
+}

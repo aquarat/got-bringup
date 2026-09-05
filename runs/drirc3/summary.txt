@@ -1,0 +1,8 @@
+steady-state windows: 27   wall 140.2 s   838 frames   5.98 fps
+  vertex      6770.6 ms    4.8% of wall
+  fragment    6212.8 ms    4.4% of wall
+  compute   113886.5 ms   81.3% of wall
+  GPU BUSY  126870.0 ms   90.5% of wall
+  compute is 89.8% of GPU busy time
+
+(lighter windows, e.g. menu: 27, 138.4 s, 32.78 fps, GPU busy 64.5%, compute 84.5% of busy)

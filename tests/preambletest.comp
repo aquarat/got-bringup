@@ -1,0 +1,114 @@
+#version 450
+layout(local_size_x = 64) in;
+layout(set = 0, binding = 0) buffer B { uint data[]; };
+layout(set = 0, binding = 1) uniform U { uvec4 v[96]; } ubo;
+layout(push_constant) uniform P { uint n; } pc;
+/* 96 loads at invocation-INDEPENDENT offsets, so nir_opt_preamble hoists them
+   all into the preamble, which AGX runs on a single thread before the shader
+   body. The body itself is trivial.
+
+   Sweep the workgroup count: if the preamble is cheap, or is amortised across
+   the dispatch, total time should barely move between 1 and many workgroups.
+   If it dominates small dispatches -- the case the cost model assumes away --
+   a 1-workgroup dispatch costs almost as much as a 64-workgroup one. */
+void main() {
+    uint i = gl_GlobalInvocationID.x;
+    uint acc = 0u;
+    acc += ubo.v[0].x;
+    acc += ubo.v[1].x;
+    acc += ubo.v[2].x;
+    acc += ubo.v[3].x;
+    acc += ubo.v[4].x;
+    acc += ubo.v[5].x;
+    acc += ubo.v[6].x;
+    acc += ubo.v[7].x;
+    acc += ubo.v[8].x;
+    acc += ubo.v[9].x;
+    acc += ubo.v[10].x;
+    acc += ubo.v[11].x;
+    acc += ubo.v[12].x;
+    acc += ubo.v[13].x;
+    acc += ubo.v[14].x;
+    acc += ubo.v[15].x;
+    acc += ubo.v[16].x;
+    acc += ubo.v[17].x;
+    acc += ubo.v[18].x;
+    acc += ubo.v[19].x;
+    acc += ubo.v[20].x;
+    acc += ubo.v[21].x;
+    acc += ubo.v[22].x;
+    acc += ubo.v[23].x;
+    acc += ubo.v[24].x;
+    acc += ubo.v[25].x;
+    acc += ubo.v[26].x;
+    acc += ubo.v[27].x;
+    acc += ubo.v[28].x;
+    acc += ubo.v[29].x;
+    acc += ubo.v[30].x;
+    acc += ubo.v[31].x;
+    acc += ubo.v[32].x;
+    acc += ubo.v[33].x;
+    acc += ubo.v[34].x;
+    acc += ubo.v[35].x;
+    acc += ubo.v[36].x;
+    acc += ubo.v[37].x;
+    acc += ubo.v[38].x;
+    acc += ubo.v[39].x;
+    acc += ubo.v[40].x;
+    acc += ubo.v[41].x;
+    acc += ubo.v[42].x;
+    acc += ubo.v[43].x;
+    acc += ubo.v[44].x;
+    acc += ubo.v[45].x;
+    acc += ubo.v[46].x;
+    acc += ubo.v[47].x;
+    acc += ubo.v[48].x;
+    acc += ubo.v[49].x;
+    acc += ubo.v[50].x;
+    acc += ubo.v[51].x;
+    acc += ubo.v[52].x;
+    acc += ubo.v[53].x;
+    acc += ubo.v[54].x;
+    acc += ubo.v[55].x;
+    acc += ubo.v[56].x;
+    acc += ubo.v[57].x;
+    acc += ubo.v[58].x;
+    acc += ubo.v[59].x;
+    acc += ubo.v[60].x;
+    acc += ubo.v[61].x;
+    acc += ubo.v[62].x;
+    acc += ubo.v[63].x;
+    acc += ubo.v[64].x;
+    acc += ubo.v[65].x;
+    acc += ubo.v[66].x;
+    acc += ubo.v[67].x;
+    acc += ubo.v[68].x;
+    acc += ubo.v[69].x;
+    acc += ubo.v[70].x;
+    acc += ubo.v[71].x;
+    acc += ubo.v[72].x;
+    acc += ubo.v[73].x;
+    acc += ubo.v[74].x;
+    acc += ubo.v[75].x;
+    acc += ubo.v[76].x;
+    acc += ubo.v[77].x;
+    acc += ubo.v[78].x;
+    acc += ubo.v[79].x;
+    acc += ubo.v[80].x;
+    acc += ubo.v[81].x;
+    acc += ubo.v[82].x;
+    acc += ubo.v[83].x;
+    acc += ubo.v[84].x;
+    acc += ubo.v[85].x;
+    acc += ubo.v[86].x;
+    acc += ubo.v[87].x;
+    acc += ubo.v[88].x;
+    acc += ubo.v[89].x;
+    acc += ubo.v[90].x;
+    acc += ubo.v[91].x;
+    acc += ubo.v[92].x;
+    acc += ubo.v[93].x;
+    acc += ubo.v[94].x;
+    acc += ubo.v[95].x;
+    data[i] = acc + i;
+}

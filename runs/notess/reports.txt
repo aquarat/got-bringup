@@ -1,0 +1,583 @@
+[hk gputime] firmware GPU timing active, reporting every 5.00 s (timebase 1000000000 Hz)
+[hk gputime] firmware GPU timing active, reporting every 5.00 s (timebase 1000000000 Hz)
+[hk gputime] 138.51 s wall   0 frames  0.0 fps
+[hk gputime]   vtx        0.0 ms    0.0% of wall       0 cmds      0.0 us each
+[hk gputime]   frag       0.0 ms    0.0% of wall       0 cmds      0.0 us each
+[hk gputime]   comp       0.0 ms    0.0% of wall       0 cmds      0.0 us each
+[hk gputime]   GPU busy (union) 0.0 ms = 0.0% of wall
+[hk gputime] 5.21 s wall   732 frames  140.4 fps
+[hk gputime]   vtx      118.5 ms    2.3% of wall    5670 cmds     20.9 us each
+[hk gputime]   frag     463.8 ms    8.9% of wall    5670 cmds     81.8 us each
+[hk gputime]   comp    1732.2 ms   33.2% of wall    6764 cmds    256.1 us each
+[hk gputime]   GPU busy (union) 2314.5 ms = 44.4% of wall
+[hk gputime]   1866 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.14 s wall   350 frames  68.1 fps
+[hk gputime]   vtx      105.9 ms    2.1% of wall    6300 cmds     16.8 us each
+[hk gputime]   frag     464.9 ms    9.0% of wall    6300 cmds     73.8 us each
+[hk gputime]   comp    2465.4 ms   48.0% of wall    6299 cmds    391.4 us each
+[hk gputime]   GPU busy (union) 3036.1 ms = 59.1% of wall
+[hk gputime]   1400 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.13 s wall   352 frames  68.6 fps
+[hk gputime]   vtx      106.5 ms    2.1% of wall    6338 cmds     16.8 us each
+[hk gputime]   frag     467.9 ms    9.1% of wall    6338 cmds     73.8 us each
+[hk gputime]   comp    2480.3 ms   48.3% of wall    6338 cmds    391.3 us each
+[hk gputime]   GPU busy (union) 3054.7 ms = 59.5% of wall
+[hk gputime]   1412 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.12 s wall   349 frames  68.2 fps
+[hk gputime]   vtx      105.5 ms    2.1% of wall    6281 cmds     16.8 us each
+[hk gputime]   frag     463.1 ms    9.0% of wall    6281 cmds     73.7 us each
+[hk gputime]   comp    2457.8 ms   48.0% of wall    6281 cmds    391.3 us each
+[hk gputime]   GPU busy (union) 3026.4 ms = 59.1% of wall
+[hk gputime]   1396 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.15 s wall   352 frames  68.3 fps
+[hk gputime]   vtx      106.4 ms    2.1% of wall    6335 cmds     16.8 us each
+[hk gputime]   frag     466.7 ms    9.1% of wall    6334 cmds     73.7 us each
+[hk gputime]   comp    2479.7 ms   48.1% of wall    6335 cmds    391.4 us each
+[hk gputime]   GPU busy (union) 3052.9 ms = 59.2% of wall
+[hk gputime]   1404 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.13 s wall   169 frames  32.9 fps
+[hk gputime]   vtx       52.0 ms    1.0% of wall    2988 cmds     17.4 us each
+[hk gputime]   frag     215.9 ms    4.2% of wall    2989 cmds     72.2 us each
+[hk gputime]   comp    2536.1 ms   49.4% of wall    3163 cmds    801.8 us each
+[hk gputime]   GPU busy (union) 2804.0 ms = 54.7% of wall
+[hk gputime]   654 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.12 s wall   73 frames  14.3 fps
+[hk gputime]   vtx      179.0 ms    3.5% of wall    2445 cmds     73.2 us each
+[hk gputime]   frag     340.1 ms    6.6% of wall    2445 cmds    139.1 us each
+[hk gputime]   comp    1844.0 ms   36.0% of wall    2181 cmds    845.5 us each
+[hk gputime]   GPU busy (union) 2338.5 ms = 45.7% of wall
+[hk gputime]   288 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.19 s wall   54 frames  10.4 fps
+[hk gputime]   vtx      224.6 ms    4.3% of wall    2472 cmds     90.9 us each
+[hk gputime]   frag     144.0 ms    2.8% of wall    2472 cmds     58.3 us each
+[hk gputime]   comp    2244.4 ms   43.3% of wall    2341 cmds    958.8 us each
+[hk gputime]   GPU busy (union) 2613.1 ms = 50.4% of wall
+[hk gputime]   211 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.20 s wall   48 frames  9.2 fps
+[hk gputime]   vtx      205.5 ms    4.0% of wall    2169 cmds     94.7 us each
+[hk gputime]   frag     126.9 ms    2.4% of wall    2169 cmds     58.5 us each
+[hk gputime]   comp    1978.5 ms   38.0% of wall    2034 cmds    972.7 us each
+[hk gputime]   GPU busy (union) 2310.9 ms = 44.4% of wall
+[hk gputime]   182 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.12 s wall   87 frames  17.0 fps
+[hk gputime]   vtx      354.2 ms    6.9% of wall    3981 cmds     89.0 us each
+[hk gputime]   frag     222.2 ms    4.3% of wall    3981 cmds     55.8 us each
+[hk gputime]   comp    3552.8 ms   69.4% of wall    3736 cmds    951.0 us each
+[hk gputime]   GPU busy (union) 4129.2 ms = 80.7% of wall
+[hk gputime]   345 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.27 s wall   95 frames  18.0 fps
+[hk gputime]   vtx      418.2 ms    7.9% of wall    4254 cmds     98.3 us each
+[hk gputime]   frag     242.4 ms    4.6% of wall    4254 cmds     57.0 us each
+[hk gputime]   comp    3863.1 ms   73.4% of wall    4085 cmds    945.7 us each
+[hk gputime]   GPU busy (union) 4523.7 ms = 85.9% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.26 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      404.6 ms    7.7% of wall    4275 cmds     94.6 us each
+[hk gputime]   frag     246.5 ms    4.7% of wall    4275 cmds     57.7 us each
+[hk gputime]   comp    3861.3 ms   73.5% of wall    4085 cmds    945.2 us each
+[hk gputime]   GPU busy (union) 4512.4 ms = 85.9% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.23 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      381.2 ms    7.3% of wall    4275 cmds     89.2 us each
+[hk gputime]   frag     244.7 ms    4.7% of wall    4275 cmds     57.2 us each
+[hk gputime]   comp    3859.1 ms   73.7% of wall    4085 cmds    944.7 us each
+[hk gputime]   GPU busy (union) 4485.0 ms = 85.7% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.24 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      390.0 ms    7.4% of wall    4251 cmds     91.7 us each
+[hk gputime]   frag     238.7 ms    4.6% of wall    4251 cmds     56.2 us each
+[hk gputime]   comp    3863.0 ms   73.7% of wall    4085 cmds    945.6 us each
+[hk gputime]   GPU busy (union) 4491.7 ms = 85.7% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.23 s wall   95 frames  18.2 fps
+[hk gputime]   vtx      367.6 ms    7.0% of wall    4249 cmds     86.5 us each
+[hk gputime]   frag     238.5 ms    4.6% of wall    4249 cmds     56.1 us each
+[hk gputime]   comp    3864.1 ms   73.9% of wall    4085 cmds    945.9 us each
+[hk gputime]   GPU busy (union) 4470.2 ms = 85.5% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.23 s wall   95 frames  18.2 fps
+[hk gputime]   vtx      393.3 ms    7.5% of wall    4275 cmds     92.0 us each
+[hk gputime]   frag     244.7 ms    4.7% of wall    4275 cmds     57.2 us each
+[hk gputime]   comp    3864.9 ms   73.9% of wall    4085 cmds    946.1 us each
+[hk gputime]   GPU busy (union) 4502.9 ms = 86.1% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.22 s wall   95 frames  18.2 fps
+[hk gputime]   vtx      373.9 ms    7.2% of wall    4275 cmds     87.5 us each
+[hk gputime]   frag     245.9 ms    4.7% of wall    4275 cmds     57.5 us each
+[hk gputime]   comp    3860.2 ms   73.9% of wall    4085 cmds    945.0 us each
+[hk gputime]   GPU busy (union) 4480.0 ms = 85.8% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.25 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      414.1 ms    7.9% of wall    4254 cmds     97.4 us each
+[hk gputime]   frag     241.8 ms    4.6% of wall    4254 cmds     56.8 us each
+[hk gputime]   comp    3868.6 ms   73.6% of wall    4085 cmds    947.0 us each
+[hk gputime]   GPU busy (union) 4524.5 ms = 86.1% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.16 s wall   95 frames  18.4 fps
+[hk gputime]   vtx      381.4 ms    7.4% of wall    4246 cmds     89.8 us each
+[hk gputime]   frag     237.7 ms    4.6% of wall    4246 cmds     56.0 us each
+[hk gputime]   comp    3852.4 ms   74.7% of wall    4085 cmds    943.1 us each
+[hk gputime]   GPU busy (union) 4471.5 ms = 86.7% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.23 s wall   95 frames  18.2 fps
+[hk gputime]   vtx      377.2 ms    7.2% of wall    4275 cmds     88.2 us each
+[hk gputime]   frag     243.6 ms    4.7% of wall    4275 cmds     57.0 us each
+[hk gputime]   comp    3861.7 ms   73.9% of wall    4085 cmds    945.3 us each
+[hk gputime]   GPU busy (union) 4482.4 ms = 85.8% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.24 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      364.6 ms    7.0% of wall    4275 cmds     85.3 us each
+[hk gputime]   frag     243.9 ms    4.7% of wall    4275 cmds     57.1 us each
+[hk gputime]   comp    3859.0 ms   73.6% of wall    4085 cmds    944.7 us each
+[hk gputime]   GPU busy (union) 4467.5 ms = 85.2% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.23 s wall   95 frames  18.2 fps
+[hk gputime]   vtx      363.4 ms    7.0% of wall    4261 cmds     85.3 us each
+[hk gputime]   frag     240.7 ms    4.6% of wall    4261 cmds     56.5 us each
+[hk gputime]   comp    3864.6 ms   73.9% of wall    4085 cmds    946.0 us each
+[hk gputime]   GPU busy (union) 4468.7 ms = 85.5% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.28 s wall   95 frames  18.0 fps
+[hk gputime]   vtx      413.8 ms    7.8% of wall    4239 cmds     97.6 us each
+[hk gputime]   frag     239.1 ms    4.5% of wall    4239 cmds     56.4 us each
+[hk gputime]   comp    3867.6 ms   73.3% of wall    4085 cmds    946.8 us each
+[hk gputime]   GPU busy (union) 4520.5 ms = 85.7% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.26 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      408.5 ms    7.8% of wall    4275 cmds     95.6 us each
+[hk gputime]   frag     247.0 ms    4.7% of wall    4275 cmds     57.8 us each
+[hk gputime]   comp    3861.3 ms   73.4% of wall    4085 cmds    945.2 us each
+[hk gputime]   GPU busy (union) 4516.9 ms = 85.9% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.04 s wall   90 frames  17.9 fps
+[hk gputime]   vtx      371.3 ms    7.4% of wall    4050 cmds     91.7 us each
+[hk gputime]   frag     231.7 ms    4.6% of wall    4050 cmds     57.2 us each
+[hk gputime]   comp    3658.3 ms   72.6% of wall    3870 cmds    945.3 us each
+[hk gputime]   GPU busy (union) 4261.2 ms = 84.5% of wall
+[hk gputime]   360 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.17 s wall   94 frames  18.2 fps
+[hk gputime]   vtx      384.9 ms    7.4% of wall    4223 cmds     91.1 us each
+[hk gputime]   frag     237.7 ms    4.6% of wall    4223 cmds     56.3 us each
+[hk gputime]   comp    3820.3 ms   73.8% of wall    4042 cmds    945.1 us each
+[hk gputime]   GPU busy (union) 4442.8 ms = 85.9% of wall
+[hk gputime]   376 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.17 s wall   95 frames  18.4 fps
+[hk gputime]   vtx      383.9 ms    7.4% of wall    4236 cmds     90.6 us each
+[hk gputime]   frag     237.0 ms    4.6% of wall    4236 cmds     55.9 us each
+[hk gputime]   comp    3860.7 ms   74.6% of wall    4085 cmds    945.1 us each
+[hk gputime]   GPU busy (union) 4481.6 ms = 86.6% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.23 s wall   95 frames  18.2 fps
+[hk gputime]   vtx      380.1 ms    7.3% of wall    4271 cmds     89.0 us each
+[hk gputime]   frag     242.3 ms    4.6% of wall    4271 cmds     56.7 us each
+[hk gputime]   comp    3864.6 ms   73.9% of wall    4085 cmds    946.1 us each
+[hk gputime]   GPU busy (union) 4487.1 ms = 85.8% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.25 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      385.4 ms    7.3% of wall    4275 cmds     90.1 us each
+[hk gputime]   frag     245.3 ms    4.7% of wall    4275 cmds     57.4 us each
+[hk gputime]   comp    3862.1 ms   73.6% of wall    4085 cmds    945.4 us each
+[hk gputime]   GPU busy (union) 4492.8 ms = 85.6% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.22 s wall   95 frames  18.2 fps
+[hk gputime]   vtx      374.8 ms    7.2% of wall    4268 cmds     87.8 us each
+[hk gputime]   frag     242.3 ms    4.6% of wall    4268 cmds     56.8 us each
+[hk gputime]   comp    3862.0 ms   74.0% of wall    4085 cmds    945.4 us each
+[hk gputime]   GPU busy (union) 4479.1 ms = 85.8% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.20 s wall   95 frames  18.3 fps
+[hk gputime]   vtx      369.7 ms    7.1% of wall    4238 cmds     87.2 us each
+[hk gputime]   frag     236.6 ms    4.5% of wall    4238 cmds     55.8 us each
+[hk gputime]   comp    3861.7 ms   74.2% of wall    4085 cmds    945.3 us each
+[hk gputime]   GPU busy (union) 4467.9 ms = 85.9% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.06 s wall   90 frames  17.8 fps
+[hk gputime]   vtx      409.6 ms    8.1% of wall    4044 cmds    101.3 us each
+[hk gputime]   frag     234.3 ms    4.6% of wall    4044 cmds     57.9 us each
+[hk gputime]   comp    3665.4 ms   72.5% of wall    3870 cmds    947.1 us each
+[hk gputime]   GPU busy (union) 4309.4 ms = 85.2% of wall
+[hk gputime]   360 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.18 s wall   95 frames  18.3 fps
+[hk gputime]   vtx      396.8 ms    7.7% of wall    4275 cmds     92.8 us each
+[hk gputime]   frag     245.4 ms    4.7% of wall    4275 cmds     57.4 us each
+[hk gputime]   comp    3851.9 ms   74.4% of wall    4085 cmds    942.9 us each
+[hk gputime]   GPU busy (union) 4494.1 ms = 86.8% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.24 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      409.0 ms    7.8% of wall    4270 cmds     95.8 us each
+[hk gputime]   frag     246.6 ms    4.7% of wall    4270 cmds     57.7 us each
+[hk gputime]   comp    3861.7 ms   73.7% of wall    4085 cmds    945.3 us each
+[hk gputime]   GPU busy (union) 4517.2 ms = 86.2% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.24 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      421.0 ms    8.0% of wall    4248 cmds     99.1 us each
+[hk gputime]   frag     240.2 ms    4.6% of wall    4248 cmds     56.5 us each
+[hk gputime]   comp    3856.8 ms   73.6% of wall    4085 cmds    944.1 us each
+[hk gputime]   GPU busy (union) 4518.0 ms = 86.2% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.20 s wall   95 frames  18.3 fps
+[hk gputime]   vtx      382.2 ms    7.4% of wall    4257 cmds     89.8 us each
+[hk gputime]   frag     240.1 ms    4.6% of wall    4257 cmds     56.4 us each
+[hk gputime]   comp    3860.5 ms   74.3% of wall    4085 cmds    945.0 us each
+[hk gputime]   GPU busy (union) 4482.9 ms = 86.3% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.23 s wall   95 frames  18.2 fps
+[hk gputime]   vtx      378.2 ms    7.2% of wall    4275 cmds     88.5 us each
+[hk gputime]   frag     244.3 ms    4.7% of wall    4275 cmds     57.1 us each
+[hk gputime]   comp    3860.2 ms   73.8% of wall    4085 cmds    945.0 us each
+[hk gputime]   GPU busy (union) 4482.7 ms = 85.7% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.21 s wall   95 frames  18.2 fps
+[hk gputime]   vtx      386.2 ms    7.4% of wall    4275 cmds     90.3 us each
+[hk gputime]   frag     243.3 ms    4.7% of wall    4275 cmds     56.9 us each
+[hk gputime]   comp    3854.9 ms   74.0% of wall    4085 cmds    943.7 us each
+[hk gputime]   GPU busy (union) 4484.3 ms = 86.1% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.23 s wall   95 frames  18.2 fps
+[hk gputime]   vtx      387.7 ms    7.4% of wall    4249 cmds     91.2 us each
+[hk gputime]   frag     237.9 ms    4.5% of wall    4249 cmds     56.0 us each
+[hk gputime]   comp    3862.5 ms   73.8% of wall    4085 cmds    945.5 us each
+[hk gputime]   GPU busy (union) 4488.1 ms = 85.8% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.19 s wall   95 frames  18.3 fps
+[hk gputime]   vtx      386.4 ms    7.4% of wall    4251 cmds     90.9 us each
+[hk gputime]   frag     240.1 ms    4.6% of wall    4251 cmds     56.5 us each
+[hk gputime]   comp    3860.8 ms   74.4% of wall    4085 cmds    945.1 us each
+[hk gputime]   GPU busy (union) 4487.3 ms = 86.4% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.23 s wall   95 frames  18.2 fps
+[hk gputime]   vtx      404.4 ms    7.7% of wall    4275 cmds     94.6 us each
+[hk gputime]   frag     246.7 ms    4.7% of wall    4275 cmds     57.7 us each
+[hk gputime]   comp    3864.0 ms   73.8% of wall    4085 cmds    945.9 us each
+[hk gputime]   GPU busy (union) 4515.1 ms = 86.3% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.21 s wall   95 frames  18.2 fps
+[hk gputime]   vtx      379.7 ms    7.3% of wall    4275 cmds     88.8 us each
+[hk gputime]   frag     245.0 ms    4.7% of wall    4275 cmds     57.3 us each
+[hk gputime]   comp    3860.7 ms   74.1% of wall    4085 cmds    945.1 us each
+[hk gputime]   GPU busy (union) 4485.4 ms = 86.1% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.15 s wall   95 frames  18.4 fps
+[hk gputime]   vtx      359.5 ms    7.0% of wall    4251 cmds     84.6 us each
+[hk gputime]   frag     238.7 ms    4.6% of wall    4251 cmds     56.2 us each
+[hk gputime]   comp    3864.7 ms   75.0% of wall    4085 cmds    946.1 us each
+[hk gputime]   GPU busy (union) 4462.9 ms = 86.6% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.26 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      426.3 ms    8.1% of wall    4249 cmds    100.3 us each
+[hk gputime]   frag     243.9 ms    4.6% of wall    4249 cmds     57.4 us each
+[hk gputime]   comp    3863.6 ms   73.4% of wall    4085 cmds    945.8 us each
+[hk gputime]   GPU busy (union) 4533.8 ms = 86.1% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.23 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      412.6 ms    7.9% of wall    4275 cmds     96.5 us each
+[hk gputime]   frag     247.5 ms    4.7% of wall    4275 cmds     57.9 us each
+[hk gputime]   comp    3865.4 ms   73.8% of wall    4085 cmds    946.2 us each
+[hk gputime]   GPU busy (union) 4525.5 ms = 86.5% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.01 s wall   90 frames  17.9 fps
+[hk gputime]   vtx      435.8 ms    8.7% of wall    4050 cmds    107.6 us each
+[hk gputime]   frag     239.7 ms    4.8% of wall    4050 cmds     59.2 us each
+[hk gputime]   comp    3662.8 ms   73.0% of wall    3870 cmds    946.4 us each
+[hk gputime]   GPU busy (union) 4338.3 ms = 86.5% of wall
+[hk gputime]   360 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.21 s wall   95 frames  18.3 fps
+[hk gputime]   vtx      382.6 ms    7.4% of wall    4256 cmds     89.9 us each
+[hk gputime]   frag     240.0 ms    4.6% of wall    4256 cmds     56.4 us each
+[hk gputime]   comp    3858.4 ms   74.1% of wall    4085 cmds    944.5 us each
+[hk gputime]   GPU busy (union) 4481.0 ms = 86.1% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.22 s wall   95 frames  18.2 fps
+[hk gputime]   vtx      407.5 ms    7.8% of wall    4244 cmds     96.0 us each
+[hk gputime]   frag     241.9 ms    4.6% of wall    4244 cmds     57.0 us each
+[hk gputime]   comp    3862.5 ms   74.1% of wall    4085 cmds    945.5 us each
+[hk gputime]   GPU busy (union) 4511.9 ms = 86.5% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.19 s wall   95 frames  18.3 fps
+[hk gputime]   vtx      362.6 ms    7.0% of wall    4275 cmds     84.8 us each
+[hk gputime]   frag     244.1 ms    4.7% of wall    4275 cmds     57.1 us each
+[hk gputime]   comp    3862.6 ms   74.4% of wall    4085 cmds    945.6 us each
+[hk gputime]   GPU busy (union) 4469.3 ms = 86.0% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.25 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      381.5 ms    7.3% of wall    4275 cmds     89.2 us each
+[hk gputime]   frag     245.4 ms    4.7% of wall    4275 cmds     57.4 us each
+[hk gputime]   comp    3855.9 ms   73.5% of wall    4085 cmds    943.9 us each
+[hk gputime]   GPU busy (union) 4482.8 ms = 85.4% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.24 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      373.5 ms    7.1% of wall    4266 cmds     87.6 us each
+[hk gputime]   frag     241.2 ms    4.6% of wall    4266 cmds     56.5 us each
+[hk gputime]   comp    3860.9 ms   73.7% of wall    4085 cmds    945.1 us each
+[hk gputime]   GPU busy (union) 4475.6 ms = 85.4% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.21 s wall   95 frames  18.2 fps
+[hk gputime]   vtx      401.5 ms    7.7% of wall    4234 cmds     94.8 us each
+[hk gputime]   frag     234.0 ms    4.5% of wall    4234 cmds     55.3 us each
+[hk gputime]   comp    3854.6 ms   74.0% of wall    4085 cmds    943.6 us each
+[hk gputime]   GPU busy (union) 4490.0 ms = 86.2% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.21 s wall   95 frames  18.2 fps
+[hk gputime]   vtx      373.6 ms    7.2% of wall    4275 cmds     87.4 us each
+[hk gputime]   frag     242.7 ms    4.7% of wall    4275 cmds     56.8 us each
+[hk gputime]   comp    3855.5 ms   74.0% of wall    4085 cmds    943.8 us each
+[hk gputime]   GPU busy (union) 4471.8 ms = 85.9% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.24 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      415.3 ms    7.9% of wall    4275 cmds     97.1 us each
+[hk gputime]   frag     244.1 ms    4.7% of wall    4275 cmds     57.1 us each
+[hk gputime]   comp    3855.0 ms   73.6% of wall    4085 cmds    943.7 us each
+[hk gputime]   GPU busy (union) 4514.4 ms = 86.2% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.23 s wall   95 frames  18.2 fps
+[hk gputime]   vtx      393.5 ms    7.5% of wall    4268 cmds     92.2 us each
+[hk gputime]   frag     241.2 ms    4.6% of wall    4268 cmds     56.5 us each
+[hk gputime]   comp    3856.2 ms   73.7% of wall    4085 cmds    944.0 us each
+[hk gputime]   GPU busy (union) 4490.9 ms = 85.8% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.26 s wall   95 frames  18.0 fps
+[hk gputime]   vtx      387.7 ms    7.4% of wall    4235 cmds     91.6 us each
+[hk gputime]   frag     234.5 ms    4.5% of wall    4235 cmds     55.4 us each
+[hk gputime]   comp    3858.3 ms   73.3% of wall    4085 cmds    944.5 us each
+[hk gputime]   GPU busy (union) 4480.6 ms = 85.1% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.26 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      404.8 ms    7.7% of wall    4272 cmds     94.7 us each
+[hk gputime]   frag     244.9 ms    4.7% of wall    4272 cmds     57.3 us each
+[hk gputime]   comp    3864.2 ms   73.4% of wall    4085 cmds    945.9 us each
+[hk gputime]   GPU busy (union) 4513.9 ms = 85.8% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.23 s wall   95 frames  18.2 fps
+[hk gputime]   vtx      384.4 ms    7.4% of wall    4275 cmds     89.9 us each
+[hk gputime]   frag     242.2 ms    4.6% of wall    4275 cmds     56.6 us each
+[hk gputime]   comp    3858.1 ms   73.8% of wall    4085 cmds    944.4 us each
+[hk gputime]   GPU busy (union) 4484.7 ms = 85.8% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.27 s wall   95 frames  18.0 fps
+[hk gputime]   vtx      419.2 ms    8.0% of wall    4268 cmds     98.2 us each
+[hk gputime]   frag     246.7 ms    4.7% of wall    4268 cmds     57.8 us each
+[hk gputime]   comp    3859.3 ms   73.3% of wall    4085 cmds    944.8 us each
+[hk gputime]   GPU busy (union) 4525.2 ms = 85.9% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.20 s wall   95 frames  18.3 fps
+[hk gputime]   vtx      382.4 ms    7.3% of wall    4238 cmds     90.2 us each
+[hk gputime]   frag     237.1 ms    4.6% of wall    4238 cmds     55.9 us each
+[hk gputime]   comp    3855.4 ms   74.1% of wall    4085 cmds    943.8 us each
+[hk gputime]   GPU busy (union) 4474.9 ms = 86.0% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.18 s wall   95 frames  18.4 fps
+[hk gputime]   vtx      372.4 ms    7.2% of wall    4269 cmds     87.2 us each
+[hk gputime]   frag     241.9 ms    4.7% of wall    4269 cmds     56.7 us each
+[hk gputime]   comp    3855.0 ms   74.5% of wall    4085 cmds    943.7 us each
+[hk gputime]   GPU busy (union) 4469.3 ms = 86.4% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.24 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      373.6 ms    7.1% of wall    4275 cmds     87.4 us each
+[hk gputime]   frag     245.3 ms    4.7% of wall    4275 cmds     57.4 us each
+[hk gputime]   comp    3861.0 ms   73.7% of wall    4085 cmds    945.2 us each
+[hk gputime]   GPU busy (union) 4479.9 ms = 85.6% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.24 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      409.8 ms    7.8% of wall    4268 cmds     96.0 us each
+[hk gputime]   frag     243.0 ms    4.6% of wall    4268 cmds     56.9 us each
+[hk gputime]   comp    3853.2 ms   73.6% of wall    4085 cmds    943.3 us each
+[hk gputime]   GPU busy (union) 4506.0 ms = 86.0% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.21 s wall   95 frames  18.2 fps
+[hk gputime]   vtx      400.7 ms    7.7% of wall    4244 cmds     94.4 us each
+[hk gputime]   frag     236.6 ms    4.5% of wall    4244 cmds     55.7 us each
+[hk gputime]   comp    3853.2 ms   74.0% of wall    4085 cmds    943.3 us each
+[hk gputime]   GPU busy (union) 4490.5 ms = 86.2% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.19 s wall   95 frames  18.3 fps
+[hk gputime]   vtx      373.2 ms    7.2% of wall    4263 cmds     87.5 us each
+[hk gputime]   frag     239.7 ms    4.6% of wall    4263 cmds     56.2 us each
+[hk gputime]   comp    3855.7 ms   74.3% of wall    4085 cmds    943.9 us each
+[hk gputime]   GPU busy (union) 4468.6 ms = 86.1% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.27 s wall   95 frames  18.0 fps
+[hk gputime]   vtx      374.2 ms    7.1% of wall    4275 cmds     87.5 us each
+[hk gputime]   frag     243.7 ms    4.6% of wall    4275 cmds     57.0 us each
+[hk gputime]   comp    3858.5 ms   73.2% of wall    4085 cmds    944.6 us each
+[hk gputime]   GPU busy (union) 4476.4 ms = 84.9% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.01 s wall   90 frames  18.0 fps
+[hk gputime]   vtx      355.4 ms    7.1% of wall    4050 cmds     87.8 us each
+[hk gputime]   frag     231.2 ms    4.6% of wall    4050 cmds     57.1 us each
+[hk gputime]   comp    3658.2 ms   73.1% of wall    3870 cmds    945.3 us each
+[hk gputime]   GPU busy (union) 4244.8 ms = 84.8% of wall
+[hk gputime]   360 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.26 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      375.2 ms    7.1% of wall    4249 cmds     88.3 us each
+[hk gputime]   frag     237.6 ms    4.5% of wall    4249 cmds     55.9 us each
+[hk gputime]   comp    3855.7 ms   73.3% of wall    4085 cmds    943.9 us each
+[hk gputime]   GPU busy (union) 4468.5 ms = 85.0% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.26 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      411.0 ms    7.8% of wall    4251 cmds     96.7 us each
+[hk gputime]   frag     241.0 ms    4.6% of wall    4251 cmds     56.7 us each
+[hk gputime]   comp    3860.8 ms   73.4% of wall    4085 cmds    945.1 us each
+[hk gputime]   GPU busy (union) 4512.8 ms = 85.8% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.23 s wall   95 frames  18.2 fps
+[hk gputime]   vtx      379.1 ms    7.3% of wall    4275 cmds     88.7 us each
+[hk gputime]   frag     244.5 ms    4.7% of wall    4275 cmds     57.2 us each
+[hk gputime]   comp    3858.4 ms   73.8% of wall    4085 cmds    944.5 us each
+[hk gputime]   GPU busy (union) 4482.0 ms = 85.7% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.18 s wall   95 frames  18.3 fps
+[hk gputime]   vtx      373.4 ms    7.2% of wall    4275 cmds     87.3 us each
+[hk gputime]   frag     244.2 ms    4.7% of wall    4275 cmds     57.1 us each
+[hk gputime]   comp    3858.1 ms   74.4% of wall    4085 cmds    944.5 us each
+[hk gputime]   GPU busy (union) 4475.8 ms = 86.4% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.26 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      391.2 ms    7.4% of wall    4251 cmds     92.0 us each
+[hk gputime]   frag     239.1 ms    4.5% of wall    4251 cmds     56.2 us each
+[hk gputime]   comp    3860.7 ms   73.4% of wall    4085 cmds    945.1 us each
+[hk gputime]   GPU busy (union) 4490.9 ms = 85.3% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.25 s wall   94 frames  17.9 fps
+[hk gputime]   vtx      415.6 ms    7.9% of wall    4204 cmds     98.9 us each
+[hk gputime]   frag     238.4 ms    4.5% of wall    4204 cmds     56.7 us each
+[hk gputime]   comp    3824.9 ms   72.8% of wall    4042 cmds    946.3 us each
+[hk gputime]   GPU busy (union) 4478.8 ms = 85.2% of wall
+[hk gputime]   376 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.28 s wall   95 frames  18.0 fps
+[hk gputime]   vtx      388.8 ms    7.4% of wall    4275 cmds     90.9 us each
+[hk gputime]   frag     245.6 ms    4.7% of wall    4275 cmds     57.4 us each
+[hk gputime]   comp    3851.3 ms   73.0% of wall    4085 cmds    942.8 us each
+[hk gputime]   GPU busy (union) 4485.7 ms = 85.0% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.19 s wall   95 frames  18.3 fps
+[hk gputime]   vtx      370.3 ms    7.1% of wall    4275 cmds     86.6 us each
+[hk gputime]   frag     243.1 ms    4.7% of wall    4275 cmds     56.9 us each
+[hk gputime]   comp    3857.0 ms   74.4% of wall    4085 cmds    944.2 us each
+[hk gputime]   GPU busy (union) 4470.4 ms = 86.2% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.01 s wall   90 frames  18.0 fps
+[hk gputime]   vtx      392.0 ms    7.8% of wall    4031 cmds     97.2 us each
+[hk gputime]   frag     229.3 ms    4.6% of wall    4031 cmds     56.9 us each
+[hk gputime]   comp    3660.0 ms   73.1% of wall    3870 cmds    945.7 us each
+[hk gputime]   GPU busy (union) 4281.3 ms = 85.5% of wall
+[hk gputime]   360 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.04 s wall   90 frames  17.9 fps
+[hk gputime]   vtx      362.3 ms    7.2% of wall    4019 cmds     90.2 us each
+[hk gputime]   frag     225.7 ms    4.5% of wall    4019 cmds     56.2 us each
+[hk gputime]   comp    3656.4 ms   72.6% of wall    3870 cmds    944.8 us each
+[hk gputime]   GPU busy (union) 4244.4 ms = 84.2% of wall
+[hk gputime]   360 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.26 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      377.8 ms    7.2% of wall    4275 cmds     88.4 us each
+[hk gputime]   frag     243.4 ms    4.6% of wall    4275 cmds     56.9 us each
+[hk gputime]   comp    3855.1 ms   73.3% of wall    4085 cmds    943.7 us each
+[hk gputime]   GPU busy (union) 4476.2 ms = 85.1% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.25 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      377.4 ms    7.2% of wall    4275 cmds     88.3 us each
+[hk gputime]   frag     242.9 ms    4.6% of wall    4275 cmds     56.8 us each
+[hk gputime]   comp    3857.1 ms   73.4% of wall    4085 cmds    944.2 us each
+[hk gputime]   GPU busy (union) 4477.4 ms = 85.2% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.24 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      388.2 ms    7.4% of wall    4268 cmds     91.0 us each
+[hk gputime]   frag     239.9 ms    4.6% of wall    4268 cmds     56.2 us each
+[hk gputime]   comp    3854.7 ms   73.5% of wall    4085 cmds    943.6 us each
+[hk gputime]   GPU busy (union) 4482.8 ms = 85.5% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.25 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      386.1 ms    7.4% of wall    4233 cmds     91.2 us each
+[hk gputime]   frag     238.0 ms    4.5% of wall    4233 cmds     56.2 us each
+[hk gputime]   comp    3862.0 ms   73.6% of wall    4085 cmds    945.4 us each
+[hk gputime]   GPU busy (union) 4486.1 ms = 85.5% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.23 s wall   95 frames  18.2 fps
+[hk gputime]   vtx      394.7 ms    7.6% of wall    4274 cmds     92.4 us each
+[hk gputime]   frag     245.2 ms    4.7% of wall    4274 cmds     57.4 us each
+[hk gputime]   comp    3861.1 ms   73.9% of wall    4085 cmds    945.2 us each
+[hk gputime]   GPU busy (union) 4501.0 ms = 86.1% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.19 s wall   95 frames  18.3 fps
+[hk gputime]   vtx      380.6 ms    7.3% of wall    4275 cmds     89.0 us each
+[hk gputime]   frag     243.7 ms    4.7% of wall    4275 cmds     57.0 us each
+[hk gputime]   comp    3860.4 ms   74.4% of wall    4085 cmds    945.0 us each
+[hk gputime]   GPU busy (union) 4484.7 ms = 86.5% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.21 s wall   95 frames  18.2 fps
+[hk gputime]   vtx      385.3 ms    7.4% of wall    4268 cmds     90.3 us each
+[hk gputime]   frag     242.5 ms    4.7% of wall    4268 cmds     56.8 us each
+[hk gputime]   comp    3853.5 ms   73.9% of wall    4085 cmds    943.3 us each
+[hk gputime]   GPU busy (union) 4481.3 ms = 86.0% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.20 s wall   95 frames  18.3 fps
+[hk gputime]   vtx      385.1 ms    7.4% of wall    4236 cmds     90.9 us each
+[hk gputime]   frag     234.1 ms    4.5% of wall    4236 cmds     55.3 us each
+[hk gputime]   comp    3858.5 ms   74.2% of wall    4085 cmds    944.6 us each
+[hk gputime]   GPU busy (union) 4477.7 ms = 86.1% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.24 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      390.7 ms    7.5% of wall    4271 cmds     91.5 us each
+[hk gputime]   frag     243.2 ms    4.6% of wall    4271 cmds     56.9 us each
+[hk gputime]   comp    3859.8 ms   73.7% of wall    4085 cmds    944.9 us each
+[hk gputime]   GPU busy (union) 4493.7 ms = 85.8% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.25 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      392.8 ms    7.5% of wall    4275 cmds     91.9 us each
+[hk gputime]   frag     245.9 ms    4.7% of wall    4275 cmds     57.5 us each
+[hk gputime]   comp    3858.2 ms   73.5% of wall    4085 cmds    944.5 us each
+[hk gputime]   GPU busy (union) 4496.9 ms = 85.7% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.24 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      384.6 ms    7.3% of wall    4268 cmds     90.1 us each
+[hk gputime]   frag     243.9 ms    4.7% of wall    4268 cmds     57.1 us each
+[hk gputime]   comp    3860.6 ms   73.7% of wall    4085 cmds    945.1 us each
+[hk gputime]   GPU busy (union) 4489.0 ms = 85.7% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.01 s wall   90 frames  18.0 fps
+[hk gputime]   vtx      408.5 ms    8.2% of wall    4018 cmds    101.7 us each
+[hk gputime]   frag     229.0 ms    4.6% of wall    4018 cmds     57.0 us each
+[hk gputime]   comp    3662.8 ms   73.2% of wall    3870 cmds    946.5 us each
+[hk gputime]   GPU busy (union) 4300.3 ms = 85.9% of wall
+[hk gputime]   360 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.21 s wall   95 frames  18.2 fps
+[hk gputime]   vtx      376.9 ms    7.2% of wall    4264 cmds     88.4 us each
+[hk gputime]   frag     240.8 ms    4.6% of wall    4264 cmds     56.5 us each
+[hk gputime]   comp    3856.4 ms   74.0% of wall    4085 cmds    944.0 us each
+[hk gputime]   GPU busy (union) 4474.0 ms = 85.8% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.26 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      381.8 ms    7.3% of wall    4275 cmds     89.3 us each
+[hk gputime]   frag     245.4 ms    4.7% of wall    4275 cmds     57.4 us each
+[hk gputime]   comp    3860.2 ms   73.4% of wall    4085 cmds    945.0 us each
+[hk gputime]   GPU busy (union) 4487.4 ms = 85.3% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.25 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      394.8 ms    7.5% of wall    4272 cmds     92.4 us each
+[hk gputime]   frag     244.6 ms    4.7% of wall    4272 cmds     57.3 us each
+[hk gputime]   comp    3853.2 ms   73.4% of wall    4085 cmds    943.2 us each
+[hk gputime]   GPU busy (union) 4492.6 ms = 85.6% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.21 s wall   95 frames  18.2 fps
+[hk gputime]   vtx      378.6 ms    7.3% of wall    4250 cmds     89.1 us each
+[hk gputime]   frag     237.7 ms    4.6% of wall    4250 cmds     55.9 us each
+[hk gputime]   comp    3859.2 ms   74.1% of wall    4085 cmds    944.7 us each
+[hk gputime]   GPU busy (union) 4475.5 ms = 85.9% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.23 s wall   95 frames  18.1 fps
+[hk gputime]   vtx      379.2 ms    7.2% of wall    4253 cmds     89.2 us each
+[hk gputime]   frag     238.7 ms    4.6% of wall    4253 cmds     56.1 us each
+[hk gputime]   comp    3856.1 ms   73.7% of wall    4085 cmds    944.0 us each
+[hk gputime]   GPU busy (union) 4474.0 ms = 85.5% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.16 s wall   95 frames  18.4 fps
+[hk gputime]   vtx      375.6 ms    7.3% of wall    4275 cmds     87.9 us each
+[hk gputime]   frag     242.8 ms    4.7% of wall    4275 cmds     56.8 us each
+[hk gputime]   comp    3852.9 ms   74.7% of wall    4085 cmds    943.2 us each
+[hk gputime]   GPU busy (union) 4471.2 ms = 86.7% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)
+[hk gputime] 5.27 s wall   95 frames  18.0 fps
+[hk gputime]   vtx      390.7 ms    7.4% of wall    4275 cmds     91.4 us each
+[hk gputime]   frag     243.8 ms    4.6% of wall    4275 cmds     57.0 us each
+[hk gputime]   comp    3853.4 ms   73.1% of wall    4085 cmds    943.3 us each
+[hk gputime]   GPU busy (union) 4488.0 ms = 85.1% of wall
+[hk gputime]   380 command(s) not profiled (app claimed the timestamp slot)

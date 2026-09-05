@@ -1,0 +1,18 @@
+#version 450
+layout(local_size_x = 64) in;
+layout(set = 0, binding = 0) buffer B { uint data[]; };
+layout(push_constant) uniform P { uint loops; uint stride; } pc;
+/* Deliberately register-hungry: many values live at once, so the allocator has
+   to choose between occupancy and spilling -- the same choice it faces on the
+   game's hot shaders (255 GPRs, occupancy 384, 272 spills). */
+void main() {
+   uint i = gl_GlobalInvocationID.x;
+   uint a[32];
+   for (int k = 0; k < 32; ++k) a[k] = data[(i * 32u + uint(k)) & 0xfffffu];
+   for (uint n = 0; n < pc.loops; ++n)
+      for (int k = 0; k < 32; ++k)
+         a[k] = a[k] * 1664525u + a[(k + 13) % 32] + 1013904223u;
+   uint acc = 0;
+   for (int k = 0; k < 32; ++k) acc ^= a[k];
+   data[i & 0xfffffu] = acc;
+}

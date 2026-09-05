@@ -1,0 +1,14 @@
+#version 450
+layout(local_size_x = 32) in;
+layout(set = 0, binding = 0) buffer B { uint data[]; };
+layout(push_constant) uniform P { uint loops; uint stride; } pc;
+void main() {
+   uint i = gl_GlobalInvocationID.x;
+   uint acc = i;
+   /* Data-dependent loop count, so the compiler cannot unroll it away. This is
+      the shape suspected in the game: few invocations, few static
+      instructions, unbounded dynamic work. */
+   for (uint k = 0; k < pc.loops; ++k)
+      acc = acc * 1664525u + 1013904223u;
+   data[i % 4194304u] = acc;
+}

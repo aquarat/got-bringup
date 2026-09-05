@@ -1,0 +1,24 @@
+#version 450
+layout(local_size_x = 64) in;
+layout(set = 0, binding = 0) buffer B { uint data[]; };
+layout(push_constant) uniform P { uint iters; uint mask; uint mode; uint pad; } pc;
+/* mode 0: pointer chase. Each load's address comes from the previous load, so
+   nothing can be prefetched or overlapped within a thread. Measures dependent
+   load latency. The buffer holds a random permutation over (mask+1) entries.
+   mode 1: streaming. Independent strided loads, fully overlappable. Measures
+   achievable bandwidth. */
+void main() {
+   uint t = gl_GlobalInvocationID.x;
+   uint acc = 0;
+   if (pc.mode == 0u) {
+      uint p = (t * 1664525u + 1013904223u) & pc.mask;
+      for (uint i = 0; i < pc.iters; ++i)
+         p = data[p];
+      acc = p;
+   } else {
+      uint base = (t * 16u) & pc.mask;
+      for (uint i = 0; i < pc.iters; ++i)
+         acc += data[(base + i * 64u) & pc.mask];
+   }
+   if (acc == 0xdeadbeefu) data[0] = acc;   /* keep it alive */
+}

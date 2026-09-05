@@ -1,0 +1,16 @@
+by scene (compute streams/frame identifies the scene):
+  streams/f    frames       fps compute ms/f
+  43             1114     17.97         28.9
+  44               95     18.45         27.7
+  55              285     18.42         25.6
+  56             1325     18.26         25.9
+  57              661     18.25         26.1
+
+steady-state windows: 37   wall 191.4 s   3480 frames   18.18 fps
+  vertex     28077.1 ms   14.7% of wall
+  fragment   25039.8 ms   13.1% of wall
+  compute    93672.4 ms   48.9% of wall
+  GPU BUSY  146789.6 ms   76.7% of wall
+  compute is 63.8% of GPU busy time
+
+(lighter windows, e.g. menu: 50, 259.0 s, 41.90 fps, GPU busy 68.3%, compute 76.4% of busy)

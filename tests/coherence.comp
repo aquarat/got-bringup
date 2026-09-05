@@ -1,0 +1,18 @@
+#version 450
+layout(local_size_x = 64) in;
+layout(set = 0, binding = 0) buffer B { uint data[]; };
+layout(push_constant) uniform P { uint mode; uint n; uint seed; uint pad; } pc;
+/* One dependency pattern, nothing else.
+   mode 0 (producer): data[i] = f(i)
+   mode 1 (consumer): data[n + i] = data[i] + 1
+   Run back to back in the same control stream with no Vulkan barrier between
+   them, so whatever ordering exists is the hardware's, selected by the CDM
+   barrier bits. If the consumer sees a stale data[i], the check fails. */
+void main() {
+   uint i = gl_GlobalInvocationID.x;
+   if (i >= pc.n) return;
+   if (pc.mode == 0u)
+      data[i] = i * 2654435761u + pc.seed;
+   else
+      data[pc.n + i] = data[i] + 1u;
+}

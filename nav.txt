@@ -1,0 +1,23 @@
+# Ghost of Tsushima nav. The in-game launcher has been DISABLED (its "Show
+# Launcher" checkbox), so the game now goes straight to the intro videos.
+#
+#   sleep <s>      wait
+#   key <keysym>   XTest key, after clicking the window to give it real focus
+#   click <x> <y>  click at coordinates RELATIVE TO the game window, corrected
+#                  for the compositor's measured pointer scale
+#   shot <label>   screenshot
+#
+# Return activates the (now disabled) launcher but is ignored by the game's own
+# main menu; a real click on CONTINUE is what advances it.
+sleep 30
+shot 1-early
+sleep 100
+shot 2-after-videos
+sleep 30
+shot 3-main-menu
+# Focus first, then space+Return: the sequence proven to advance the menu.
+key space
+sleep 6
+key Return
+sleep 25
+shot 4-loading

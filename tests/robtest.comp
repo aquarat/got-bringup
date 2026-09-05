@@ -1,0 +1,10 @@
+#version 450
+layout(local_size_x = 64) in;
+/* Array behind a header: every access offset is iadd(amul(idx,4), 16), the
+   shape check_in_bounds() now handles in elements. */
+layout(set = 0, binding = 0) buffer S { uint hdr[4]; uint data[]; } s;
+layout(set = 0, binding = 1) buffer D { uint out_[]; } d;
+void main() {
+    uint i = gl_GlobalInvocationID.x;
+    d.out_[i] = s.data[i];
+}

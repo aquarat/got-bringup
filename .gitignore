@@ -1,0 +1,56 @@
+# Benchmark run artifacts.
+#
+# runs/ is ~750 MB and most of it is raw logs and screenshots. The analysis
+# files -- reports.txt and summary.txt -- ARE kept, because every number in the
+# documentation is derived from them and a repository where the claims cannot
+# be re-derived is worth much less.
+#
+# The rest is excluded for two reasons. Size: 533 MB of PNGs, an 11 MB
+# proton.log, a 45 MB CSV. And privacy: the Steam and Proton logs carry the
+# author's Linux username in ~2250 absolute paths, a private LAN address, and
+# in three game.log files a persistent telemetry client ID that the publisher
+# could correlate to an account. None of that is needed to reproduce anything.
+runs/**/*.png
+runs/**/proton.log
+runs/**/steam-stdout.txt
+runs/**/harness.log
+runs/**/clean.log
+runs/**/game.log
+runs/**/threads.txt
+runs/**/*.qpa
+runs/*.csv
+runs/**/samples.csv
+runs/**/marks.csv
+runs/**/guest-raw.csv
+
+# Local investigation notes and captured logs from the bring-up. Same problem
+# as above: usernames and a telemetry client ID, no reproduction value.
+evidence/
+
+# Build output. Every one of these has its source next to it.
+tests/*.spv
+tests/bigconst
+tests/coherence
+tests/cstest
+tests/disptest
+tests/drawcost
+tests/drirctest
+tests/gfxtest
+tests/memtest
+tests/occtest
+tests/preambletest
+tests/robtest
+tests/ssboload
+tests/ssboload2
+tests/statetest
+tests/tstest
+tests/waittest
+
+# Prebuilt x86-64 FEX guest thunks. Redistributing third-party binaries raises
+# a licensing question this repository should not answer; build them from FEX.
+fex/GuestThunks/*.so
+
+# Backups and scratch.
+*.bak
+*.bak-*
+*.backup-*

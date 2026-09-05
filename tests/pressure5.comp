@@ -1,0 +1,58 @@
+#version 450
+/*
+ * As pressure2.comp, but with uvec2 slots, so the pressure is roughly doubled
+ * and the shader sits at the top of the register file (the 256-halfreg
+ * ceiling) even before any occupancy request. That is the regime the game's
+ * two hottest compute shaders are in: 255 GPRs, 384 threads, already
+ * spilling.
+ *
+ * A plain uint a[128] does NOT get here: NIR declines to promote an
+ * indirectly-indexed array that large and leaves it in scratch, which drops
+ * the register count to ~17. Keeping 64 slots and widening the element instead
+ * keeps the array promotable while doubling what is live.
+ *
+ * Every operation is componentwise and both components use the same indices,
+ * so .x and .y evolve as two independent copies of the pressure2 recurrence.
+ * See reference_uvec2() in occtest.c.
+ */
+layout(local_size_x = 32) in;
+layout(set = 0, binding = 0) buffer B { uint data[]; };
+layout(push_constant) uniform P { uint rounds; uint seed; } pc;
+
+#define N 64
+
+void main() {
+   uint i = gl_GlobalInvocationID.x;
+   uvec2 a[N];
+
+   uint s = i * 2654435761u + pc.seed;
+   for (int k = 0; k < N; ++k) {
+      s = s * 1664525u + 1013904223u;
+      a[k].x = s ^ (uint(k) * 0x9e3779b9u);
+      s = s * 1664525u + 1013904223u;
+      a[k].y = s ^ (uint(k) * 0x85ebca6bu);
+   }
+
+   uint s1 = (pc.seed | 1u) & 63u;
+   uint s2 = ((pc.seed >> 8) | 1u) & 63u;
+   uint s3 = ((pc.seed >> 16) | 1u) & 63u;
+
+   for (uint r = 0; r < pc.rounds; ++r) {
+      for (uint k = 0; k < uint(N); ++k) {
+         uvec2 x = a[k];
+         uvec2 y = a[(k + s1) & 63u];
+         uvec2 z = a[(k + s2) & 63u];
+         uvec2 w = a[(k + s3) & 63u];
+         x += (y ^ (z + w));
+         x = (x << 7) | (x >> 25);
+         x = x * 2246822519u + 374761393u;
+         a[k] = x;
+      }
+   }
+
+   uvec2 acc = uvec2(0u);
+   for (int k = 0; k < N; ++k)
+      acc = (acc ^ a[k]) * 2654435761u + uvec2(uint(k));
+
+   data[i] = acc.x ^ (acc.y * 3u);
+}

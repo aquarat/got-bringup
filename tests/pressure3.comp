@@ -1,0 +1,66 @@
+#version 450
+/*
+ * A genuinely register-hungry compute shader, for exercising the register
+ * allocator's occupancy/spill tradeoff.
+ *
+ * (Generated from pressure2.comp with N=128.)
+ * tests/pressure.comp only reaches 71 GPRs because its array is walked in a
+ * strictly sequential loop, so only a handful of elements are live at once and
+ * the whole array collapses into a short live range.
+ *
+ * This one keeps all 64 slots simultaneously live:
+ *   - Every round mixes slot k with THREE other slots at strides that are
+ *     coprime with 64, so no element dies until the very end.
+ *   - The strides are data dependent (derived from a push constant), so the
+ *     array cannot be promoted to registers with a static access pattern and
+ *     then partially dead-coded.
+ *   - The reduction at the end reads every slot, extending every live range to
+ *     the bottom of the shader.
+ *
+ * It is also self-checking: the result is a pure function of (index, rounds,
+ * seed) computed only with uint arithmetic, so the CPU can reproduce it
+ * bit-exactly. See occtest.c.
+ */
+layout(local_size_x = 32) in;
+layout(set = 0, binding = 0) buffer B { uint data[]; };
+layout(push_constant) uniform P { uint rounds; uint seed; } pc;
+
+#define N 128
+
+void main() {
+   uint i = gl_GlobalInvocationID.x;
+   uint a[N];
+
+   /* Seed. Derived from the invocation and a runtime constant, so nothing is
+      constant-folded. */
+   uint s = i * 2654435761u + pc.seed;
+   for (int k = 0; k < N; ++k) {
+      s = s * 1664525u + 1013904223u;
+      a[k] = s ^ (uint(k) * 0x9e3779b9u);
+   }
+
+   /* Strides coprime with N=64 (i.e. odd), chosen at runtime. */
+   uint s1 = (pc.seed | 1u) & 127u;
+   uint s2 = ((pc.seed >> 8) | 1u) & 127u;
+   uint s3 = ((pc.seed >> 16) | 1u) & 127u;
+
+   for (uint r = 0; r < pc.rounds; ++r) {
+      for (uint k = 0; k < uint(N); ++k) {
+         uint x = a[k];
+         uint y = a[(k + s1) & 127u];
+         uint z = a[(k + s2) & 127u];
+         uint w = a[(k + s3) & 127u];
+         x += (y ^ (z + w));
+         x = (x << 7) | (x >> 25);
+         x = x * 2246822519u + 374761393u;
+         a[k] = x;
+      }
+   }
+
+   /* Read every slot, so every live range reaches here. */
+   uint acc = 0u;
+   for (int k = 0; k < N; ++k)
+      acc = (acc ^ a[k]) * 2654435761u + uint(k);
+
+   data[i] = acc;
+}

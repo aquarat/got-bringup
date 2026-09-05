@@ -1,0 +1,78 @@
+#version 450
+layout(local_size_x = 64) in;
+/* A header before the array, so every access offset is iadd(amul(idx,4), 16)
+   rather than a bare amul. That is the shape Ghost of Tsushima's shaders have,
+   and check_in_bounds() in hk_shader.c has an explicit
+   "TODO: handle also the iadd(amul) pattern, this is important" for it --
+   without which the bounds check falls back to clamping in BYTES. */
+layout(set = 0, binding = 0) buffer B { uint hdr[4]; uint data[]; } b;
+layout(push_constant) uniform P { uint n; } pc;
+void main() {
+    uint i = gl_GlobalInvocationID.x;
+    uint acc = 0u;
+    acc += b.data[(i * 3u + 0u) % pc.n];
+    acc += b.data[(i * 5u + 1u) % pc.n];
+    acc += b.data[(i * 7u + 2u) % pc.n];
+    acc += b.data[(i * 9u + 3u) % pc.n];
+    acc += b.data[(i * 11u + 4u) % pc.n];
+    acc += b.data[(i * 13u + 5u) % pc.n];
+    acc += b.data[(i * 15u + 6u) % pc.n];
+    acc += b.data[(i * 17u + 7u) % pc.n];
+    acc += b.data[(i * 19u + 8u) % pc.n];
+    acc += b.data[(i * 21u + 9u) % pc.n];
+    acc += b.data[(i * 23u + 10u) % pc.n];
+    acc += b.data[(i * 25u + 11u) % pc.n];
+    acc += b.data[(i * 27u + 12u) % pc.n];
+    acc += b.data[(i * 29u + 13u) % pc.n];
+    acc += b.data[(i * 31u + 14u) % pc.n];
+    acc += b.data[(i * 33u + 15u) % pc.n];
+    acc += b.data[(i * 35u + 16u) % pc.n];
+    acc += b.data[(i * 37u + 17u) % pc.n];
+    acc += b.data[(i * 39u + 18u) % pc.n];
+    acc += b.data[(i * 41u + 19u) % pc.n];
+    acc += b.data[(i * 43u + 20u) % pc.n];
+    acc += b.data[(i * 45u + 21u) % pc.n];
+    acc += b.data[(i * 47u + 22u) % pc.n];
+    acc += b.data[(i * 49u + 23u) % pc.n];
+    acc += b.data[(i * 51u + 24u) % pc.n];
+    acc += b.data[(i * 53u + 25u) % pc.n];
+    acc += b.data[(i * 55u + 26u) % pc.n];
+    acc += b.data[(i * 57u + 27u) % pc.n];
+    acc += b.data[(i * 59u + 28u) % pc.n];
+    acc += b.data[(i * 61u + 29u) % pc.n];
+    acc += b.data[(i * 63u + 30u) % pc.n];
+    acc += b.data[(i * 65u + 31u) % pc.n];
+    acc += b.data[(i * 67u + 32u) % pc.n];
+    acc += b.data[(i * 69u + 33u) % pc.n];
+    acc += b.data[(i * 71u + 34u) % pc.n];
+    acc += b.data[(i * 73u + 35u) % pc.n];
+    acc += b.data[(i * 75u + 36u) % pc.n];
+    acc += b.data[(i * 77u + 37u) % pc.n];
+    acc += b.data[(i * 79u + 38u) % pc.n];
+    acc += b.data[(i * 81u + 39u) % pc.n];
+    acc += b.data[(i * 83u + 40u) % pc.n];
+    acc += b.data[(i * 85u + 41u) % pc.n];
+    acc += b.data[(i * 87u + 42u) % pc.n];
+    acc += b.data[(i * 89u + 43u) % pc.n];
+    acc += b.data[(i * 91u + 44u) % pc.n];
+    acc += b.data[(i * 93u + 45u) % pc.n];
+    acc += b.data[(i * 95u + 46u) % pc.n];
+    acc += b.data[(i * 97u + 47u) % pc.n];
+    acc += b.data[(i * 99u + 48u) % pc.n];
+    acc += b.data[(i * 101u + 49u) % pc.n];
+    acc += b.data[(i * 103u + 50u) % pc.n];
+    acc += b.data[(i * 105u + 51u) % pc.n];
+    acc += b.data[(i * 107u + 52u) % pc.n];
+    acc += b.data[(i * 109u + 53u) % pc.n];
+    acc += b.data[(i * 111u + 54u) % pc.n];
+    acc += b.data[(i * 113u + 55u) % pc.n];
+    acc += b.data[(i * 115u + 56u) % pc.n];
+    acc += b.data[(i * 117u + 57u) % pc.n];
+    acc += b.data[(i * 119u + 58u) % pc.n];
+    acc += b.data[(i * 121u + 59u) % pc.n];
+    acc += b.data[(i * 123u + 60u) % pc.n];
+    acc += b.data[(i * 125u + 61u) % pc.n];
+    acc += b.data[(i * 127u + 62u) % pc.n];
+    acc += b.data[(i * 129u + 63u) % pc.n];
+    b.data[i] = acc;
+}
