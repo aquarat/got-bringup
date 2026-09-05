@@ -48,20 +48,50 @@ printf '%s\n' "$RPM_GPG_PRIVATE_KEY" | gpg --batch --quiet --import 2>&1 |
 
 KEYID=$(gpg --list-secret-keys --with-colons | awk -F: '/^sec:/ {print $5; exit}')
 [ -n "$KEYID" ] || { echo "$PROG: no secret key after import -- is RPM_GPG_PRIVATE_KEY the private half?" >&2; exit 1; }
+KEYFPR=$(gpg --list-secret-keys --with-colons | awk -F: '/^fpr:/ {print $10; exit}')
 UID_LINE=$(gpg --list-secret-keys --with-colons | awk -F: '/^uid:/ {print $10; exit}')
-echo "$PROG: signing with $KEYID  ($UID_LINE)"
+echo "$PROG: signing with $KEYFPR  ($UID_LINE)"
 
-SIGN_ARGS=(--define "_gpg_name $KEYID")
+# Take the passphrase off this copy of the key.
+#
+# rpm 6 made the low-level signing macros parametric, so the %__gpg_sign_cmd /
+# %_gpg_sign_cmd_extra_args override that used to carry "--pinentry-mode
+# loopback --passphrase-file" is ignored outright. rpm then runs gpg with no way
+# to obtain a passphrase, gets nothing back, and exits 0 having signed nothing --
+# which is how this failed silently before.
+#
+# Presetting the passphrase into gpg-agent would work, but needs
+# allow-preset-passphrase, the keygrip and a running agent. Stripping it is
+# simpler and costs nothing here: this is a throwaway GNUPGHOME inside an
+# ephemeral container, and the passphrase protects the key at rest on the
+# author's phone and in the GitHub secret -- not in this process, which was
+# handed the plaintext key in an environment variable a moment ago.
 if [ -n "${RPM_GPG_PASSPHRASE:-}" ]; then
-    # --pinentry-mode loopback is what lets gpg take a passphrase without a tty.
-    # There is no terminal in a container and no agent to ask.
-    pf="$GNUPGHOME/pp"
-    printf '%s' "$RPM_GPG_PASSPHRASE" > "$pf"
-    chmod 600 "$pf"
-    SIGN_ARGS+=(--define "_gpg_sign_cmd_extra_args --batch --pinentry-mode loopback --passphrase-file $pf")
-else
-    SIGN_ARGS+=(--define "_gpg_sign_cmd_extra_args --batch --pinentry-mode loopback")
+    if ! gpg --batch --quiet --pinentry-mode loopback \
+             --passphrase "$RPM_GPG_PASSPHRASE" --new-passphrase '' \
+             --passwd "$KEYFPR" 2>/dev/null; then
+        echo "$PROG: could not unlock the key -- is RPM_GPG_PASSPHRASE right?" >&2
+        exit 1
+    fi
 fi
+
+# Prove gpg can sign without a terminal BEFORE handing the job to rpm, which
+# reports a signing failure as success.
+if ! echo preflight | gpg --batch --yes --quiet --local-user "$KEYFPR" \
+        --detach-sign --output /dev/null 2>&1; then
+    echo "$PROG: gpg cannot sign non-interactively with $KEYFPR" >&2
+    exit 1
+fi
+echo "$PROG: gpg signs non-interactively"
+
+SIGN_ARGS=(
+    # rpm 6 names the signer with %_openpgp_sign_id and picks the backend with
+    # %_openpgp_sign; %_gpg_name is the rpm 4/5 spelling and is kept so this
+    # script works on both.
+    --define "_openpgp_sign gpg"
+    --define "_openpgp_sign_id $KEYFPR"
+    --define "_gpg_name $KEYFPR"
+)
 
 shopt -s nullglob
 rpms=("$DIR"/*.rpm)

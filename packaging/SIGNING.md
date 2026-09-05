@@ -67,6 +67,26 @@ release assets and the repository carry the new public key. Users who added the
 repository get the new key through the `gpgkey=` URL; users who imported the old
 one by hand need `sudo rpm -e --allmatches gpg-pubkey-<old-id>` first.
 
+## A note on the passphrase
+
+`sign-rpms.sh` strips the passphrase off its own imported copy of the key before
+signing, inside the throwaway keyring it makes in the container.
+
+That is not laziness. rpm 6 made the low-level signing macros parametric, so the
+`%__gpg_sign_cmd` override that used to carry `--pinentry-mode loopback` and a
+passphrase file is ignored — rpm runs gpg with no way to obtain a passphrase,
+gets nothing back, and **exits 0 having signed nothing**. Presetting the
+passphrase into `gpg-agent` would also work but needs `allow-preset-passphrase`,
+the keygrip and a running agent.
+
+It costs nothing: the process doing the stripping was handed the plaintext key
+in an environment variable a moment earlier. The passphrase protects the key
+where it is at rest — on your device, and in the GitHub secret — not inside a
+container that already has it.
+
+rpm 6 also renamed the signer macro. `%_openpgp_sign_id` is what it reads;
+`%_gpg_name` is the rpm 4/5 spelling. The script sets both.
+
 ## Why the workflow does not fail when there is no key
 
 The secret cannot exist until somebody creates it, and refusing to build until
