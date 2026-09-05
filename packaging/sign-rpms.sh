@@ -172,14 +172,22 @@ rpm --checksig -v "${rpms[0]}" 2>&1 | sed 's/^/  /'
 echo "$PROG: ---"
 
 signed() {
-    if [ "$verify" = 1 ]; then
-        # Matches both the summary form ("digests signatures OK") and the
-        # verbose per-line form ("... Signature, key ID abc: OK").
-        rpm --checksig -v "$1" 2>&1 | grep -qiE 'signature[^:]*: *ok|signatures ok'
-    else
+    local out
+    if [ "$verify" != 1 ]; then
         sig=$(rpm -qpi "$1" 2>/dev/null | sed -n 's/^Signature *: *//p')
         [ -n "$sig" ] && [ "$sig" != "(none)" ]
+        return
     fi
+    out=$(rpm --checksig -v "$1" 2>&1)
+    # Verbose form, one line per check, the signature line ending in OK:
+    #   Header OpenPGP V4 RSA/SHA512 signature, key fingerprint: 22ff...: OK
+    # Note the two colons -- matching up to "the first colon after the word
+    # signature" does not work, and silently reported signed packages as
+    # unsigned for three CI rounds.
+    printf '%s\n' "$out" | grep -i signature | grep -qiE ':[[:space:]]*OK[[:space:]]*$' && return 0
+    # Summary form: "pkg.rpm: digests signatures OK"
+    printf '%s\n' "$out" | grep -qi 'signatures ok' && return 0
+    return 1
 }
 
 fail=0
