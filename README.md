@@ -14,7 +14,18 @@ what each change is worth on its own.
 | Constant tables out of per-invocation scratch | +30.1% | 1.88x |
 
 The driver changes live in a separate repository (a Mesa fork); this one holds
-the measurement harness, the tests, and the written record.
+the measurement harness, the tests, and the written record. `mesa-source.env`
+names that fork and pins the exact commit every number here was produced from.
+
+## Just want the faster driver?
+
+**[INSTALL.md](INSTALL.md)** — an RPM for Fedora Asahi Remix, built from that
+pinned commit by `.github/workflows/build-driver.yml`. Installing it changes
+nothing; `honeykrisp-got enable` is a separate step, because reaching a Steam
+game means replacing the Vulkan driver your compositor is also using. Read the
+first section of INSTALL.md before you do it.
+
+Or build it yourself: `./build-driver.sh`, then `./deploy-system-driver.sh deploy`.
 
 ## Read this before trusting any number
 
@@ -38,9 +49,13 @@ compute time**, against roughly 15% before.
 
 | path | what |
 |---|---|
+| `INSTALL.md` | how to get the driver onto a machine that is not this one |
 | `STATE.md` | where the work stands; start here |
 | `data/` | the analysis: per-fix results, measurement hazards, what is left |
 | `CHECKLIST.md` | the full record, including every wrong turn and why it was wrong |
+| `mesa-source.env` | the Mesa fork, branch and commit the driver comes from |
+| `build-driver.sh` | clone that commit and build the driver from it |
+| `packaging/` | the RPM: spec, the `honeykrisp-got` tool, the CI build |
 | `autorun.sh` | unattended measurement run |
 | `reset-session.sh` | tear down a wedged muvm/Steam session |
 | `tests/` | standalone Vulkan tests that isolate one question each |

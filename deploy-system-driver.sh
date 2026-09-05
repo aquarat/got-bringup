@@ -32,6 +32,18 @@
 #   ./deploy-system-driver.sh deploy [SRC]   # SRC defaults to mesa-local
 #   ./deploy-system-driver.sh restore
 #   ./deploy-system-driver.sh status
+#
+# BUILD THE SOURCE FIRST
+#   ./build-driver.sh      clones the Mesa fork pinned in mesa-source.env and
+#                          builds it into exactly the layout SRC_DEFAULT expects.
+#
+# FOR ANYONE WHO IS NOT DEVELOPING THE DRIVER
+#   The RPM in INSTALL.md does the same swap with the rough edges taken off: it
+#   replaces the file by rename rather than rewriting pages mapped into a live
+#   compositor, refreshes the backup so a restore after a mesa update does not
+#   roll the system back to an older Mesa, and re-applies itself when a dnf
+#   upgrade puts the distro driver back. This script is kept for the case it was
+#   written for -- swapping in a build you just made, over and over.
 
 set -uo pipefail
 
