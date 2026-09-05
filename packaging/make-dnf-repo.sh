@@ -139,7 +139,8 @@ cat <<'HTML'
 <p>A dnf repository for the Honeykrisp (Asahi) Vulkan driver built from
 <a href="https://github.com/aquarat/got-bringup">aquarat/got-bringup</a>, carrying
 two changes measured to cut <em>Ghost of Tsushima DIRECTOR'S CUT</em>'s per-frame
-compute time by about 4.1x on an M1 Max.</p>
+GPU compute time on an M1 Max from 102.8 ms to 18.6 ms on the heaviest scene
+measured, and by less on lighter ones.</p>
 
 <h2>Install</h2>
 <pre><code>sudo dnf config-manager addrepo --from-repofile=BASEURL/honeykrisp-got.repo

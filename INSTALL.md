@@ -1,9 +1,10 @@
 # Installing the patched driver on Fedora Asahi Remix
 
-The driver makes *Ghost of Tsushima DIRECTOR'S CUT* about **4.1x cheaper on
-compute time** on an M1 Max. Everything behind that number, including the three
-measurement hazards that invalidated earlier ones, is in `STATE.md` and
-`data/`.
+The driver cuts *Ghost of Tsushima DIRECTOR'S CUT*'s GPU compute time per
+frame on an M1 Max from **102.8 ms to 18.6 ms on the heaviest scene measured**,
+and by less on lighter ones. Everything behind that number, including the
+measurement hazards that invalidated earlier figures (an older "4.1x" among
+them), is in `STATE.md` and `data/per-fix-results.md`.
 
 This page is how to get it onto your machine.
 

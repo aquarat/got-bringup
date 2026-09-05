@@ -1,17 +1,18 @@
 # honeykrisp-got
 
 The Honeykrisp (Asahi) Vulkan driver, built from a Mesa fork carrying two
-changes that cut *Ghost of Tsushima DIRECTOR'S CUT*'s per-frame compute time by
-about **4.1x** on an M1 Max:
+changes that cut *Ghost of Tsushima DIRECTOR'S CUT*'s per-frame GPU compute
+time on an M1 Max from **102.8 ms to 18.6 ms on the heaviest scene measured**:
 
-| fix | fps | compute |
+| fix | heavy scene | light scene |
 |---|---|---|
-| independent compute dispatches allowed to overlap | +34.5% | 2.17x |
-| shader constant tables kept out of per-invocation scratch | +30.1% | 1.88x |
+| independent compute dispatches allowed to overlap | 5.53x compute | 1.45x |
+| shader constant tables kept out of per-invocation scratch | 2.03x compute | 2.70x |
 
-Measured at pinned render resolution, one change removed at a time. The evidence,
-including the three measurement hazards that invalidated earlier numbers, is at
-<https://github.com/aquarat/got-bringup>.
+Measured at pinned render resolution, gameplay only, per scene, one change
+removed at a time. The gain depends strongly on the scene, which is why there
+is no single headline number. The evidence, including the measurement hazards
+that invalidated earlier figures, is at <https://github.com/aquarat/got-bringup>.
 
 ## Installing it changes nothing on its own
 
