@@ -54,7 +54,9 @@ ls -la "$OUT"
 
 # A package that lists no dependency on libvulkan or libdrm did not link what we
 # think it linked. Cheap check, and it has to hold on every release.
-MAIN=$(ls "$OUT"/honeykrisp-got-[0-9]*.rpm | grep -v debug | head -1)
+# .aarch64.rpm explicitly: the srpm shares the same prefix and would otherwise
+# be picked up here, and it contains no driver to check.
+MAIN=$(ls "$OUT"/honeykrisp-got-[0-9]*.aarch64.rpm | grep -v debug | head -1)
 rpm -qlp "$MAIN" | grep -q 'libvulkan_asahi.so' \
     || { echo "ci-build: the package contains no driver" >&2; exit 1; }
 rpm -qp --requires "$MAIN" | grep -q 'libdrm' \

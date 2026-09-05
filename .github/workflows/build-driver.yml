@@ -65,7 +65,7 @@ jobs:
             rpm -qip "$f" 2>/dev/null | sed 's/^/  /' || true
           done
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: honeykrisp-got-fc${{ matrix.fedora }}
           path: out/*.rpm
@@ -96,7 +96,10 @@ jobs:
             echo "honeykrisp-got user-config"
             echo '```'
           } > "$notes"
-          gh release create "$tag" out/*.rpm \
+          # Binary packages only. The srpm is 131 MB -- it carries the whole
+          # Mesa tarball -- and anyone who wants it can regenerate it from
+          # mesa-source.env with packaging/make-srpm.sh. It stays a CI artifact.
+          gh release create "$tag" out/*.aarch64.rpm \
             --title "honeykrisp-got ${MESA_COMMIT:0:12} (fc${{ matrix.fedora }})" \
             --notes-file "$notes" || \
-          gh release upload "$tag" out/*.rpm --clobber
+          gh release upload "$tag" out/*.aarch64.rpm --clobber

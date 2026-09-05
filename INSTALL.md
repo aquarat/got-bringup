@@ -139,6 +139,10 @@ To build the RPM locally, on any aarch64 Fedora machine or container:
 
     podman run --rm -v "$PWD:/src" -w /src fedora:44 packaging/ci-build.sh
 
+That leaves the binary packages and a source RPM in `out/`. The source RPM is
+131 MB — it carries the whole Mesa tarball — so it is not attached to releases;
+`packaging/make-srpm.sh` regenerates it from the pin whenever you want it.
+
 ## Which machines this has actually been tested on
 
 One: an M1 Max under Fedora Asahi Remix 44. The conformance runs (15,307 tests
