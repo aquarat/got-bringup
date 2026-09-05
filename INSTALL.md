@@ -36,17 +36,35 @@ deliberate step.
 
 ## 1. Install the package
 
-Grab the latest `honeykrisp-got-*.aarch64.rpm` from
-[Releases](https://github.com/aquarat/got-bringup/releases) and:
+From the dnf repository, so that `dnf upgrade` carries the driver forward
+instead of leaving you on whatever you downloaded once:
+
+    sudo dnf config-manager addrepo \
+        --from-repofile=https://aquarat.github.io/got-bringup/honeykrisp-got.repo
+    sudo dnf install honeykrisp-got
+
+On Fedora 40 and older that is `dnf config-manager --add-repo <url>`.
+
+Or grab a single `honeykrisp-got-*.aarch64.rpm` from
+[Releases](https://github.com/aquarat/got-bringup/releases):
 
     sudo dnf install ./honeykrisp-got-*.aarch64.rpm
 
-Or let the script find the newest release for you. Read it first — it is 40
-lines and it installs a driver:
+Or let the script do whichever of those is available. Read it first — it
+installs a driver:
 
     curl -fsSLO https://raw.githubusercontent.com/aquarat/got-bringup/main/install.sh
     less install.sh
     bash install.sh
+
+### Are the packages signed?
+
+Whether the published packages are signed depends on whether a packaging key has
+been configured; `packaging/SIGNING.md` explains how, and the repository's
+[index page](https://aquarat.github.io/got-bringup/) states plainly which it is.
+If they are unsigned the `.repo` file sets `gpgcheck=0` and `dnf` will tell you
+so at install time. That is not a formality — nothing then proves a package came
+from this pipeline rather than from whoever served it to you.
 
 ## 2. Check it before deploying it
 
@@ -115,6 +133,7 @@ constant frame rate. `data/measurement-hazards.md` has the details and
     HK_PERFTEST=nooverlap ...              # keep the driver, restore the old barrier
     sudo honeykrisp-got disable            # put the distro driver back
     sudo dnf remove honeykrisp-got         # remove it entirely (disables first)
+    sudo rm /etc/yum.repos.d/honeykrisp-got.repo    # and stop tracking updates
 
 ## After a mesa update
 

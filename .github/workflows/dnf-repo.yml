@@ -1,0 +1,82 @@
+# Publish the built packages as a dnf repository on GitHub Pages, so installing
+# and updating the driver is "dnf install honeykrisp-got" rather than finding
+# the newest file on the releases page by hand.
+#
+# The releases ARE the source of truth. This workflow reads every published
+# release, files the packages by dist tag and runs createrepo_c over the result,
+# so the site is a complete rebuild every time and never drifts from what is
+# actually released. Deleting a release removes its packages from the
+# repository on the next run, which is what you would want and is not true of
+# an incrementally updated tree.
+#
+# ONE-TIME SETUP: Settings -> Pages -> Build and deployment -> Source:
+# "GitHub Actions". Without it, deploy-pages fails and says so.
+
+name: dnf repository
+
+on:
+  release:
+    types: [published, edited, deleted, released]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Two of these racing would publish whichever finished last, which for a full
+# rebuild is harmless but confusing. Let one finish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Collect the packages from every release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p rpms
+          tags=$(gh release list --limit 100 --json tagName,isDraft \
+                   --jq '.[] | select(.isDraft | not) | .tagName')
+          if [ -z "$tags" ]; then
+            echo "No published releases, so there is nothing to serve." >&2
+            echo "Cut one first: run the 'build driver package' workflow with publish: true." >&2
+            exit 1
+          fi
+          for t in $tags; do
+            echo "== $t"
+            gh release download "$t" -D rpms --clobber \
+              -p '*.aarch64.rpm' -p 'RPM-GPG-KEY-honeykrisp-got' || true
+          done
+          ls -la rpms
+
+      - name: Build the repository
+        env:
+          RPM_GPG_PRIVATE_KEY: ${{ secrets.RPM_GPG_PRIVATE_KEY }}
+          RPM_GPG_PASSPHRASE: ${{ secrets.RPM_GPG_PASSPHRASE }}
+          BASE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+        run: |
+          docker run --rm \
+            -v "$PWD:/src" -w /src \
+            -e RPM_GPG_PRIVATE_KEY -e RPM_GPG_PASSPHRASE \
+            registry.fedoraproject.org/fedora:44 \
+            bash -c 'dnf -y install --setopt=install_weak_deps=False createrepo_c gnupg2 findutils >/dev/null &&
+                     packaging/make-dnf-repo.sh rpms site '"$BASE_URL"
+          sudo chown -R "$(id -u):$(id -g)" site
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - id: deploy
+        uses: actions/deploy-pages@v4

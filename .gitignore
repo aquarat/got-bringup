@@ -59,3 +59,9 @@ fex/GuestThunks/*.so
 # is worth 40 MB of git history.
 out/
 packaging/srpm/
+
+# Packaging keys and the generated dnf repository. private.asc in particular is
+# a signing key; make-gpg-key.sh writes it here and tells you to move it.
+packaging/gpg-key/
+site/
+rpms/

@@ -19,11 +19,16 @@ names that fork and pins the exact commit every number here was produced from.
 
 ## Just want the faster driver?
 
-**[INSTALL.md](INSTALL.md)** — an RPM for Fedora Asahi Remix, built from that
-pinned commit by `.github/workflows/build-driver.yml`. Installing it changes
-nothing; `honeykrisp-got enable` is a separate step, because reaching a Steam
-game means replacing the Vulkan driver your compositor is also using. Read the
-first section of INSTALL.md before you do it.
+**[INSTALL.md](INSTALL.md)** — a dnf repository and RPMs for Fedora Asahi Remix,
+built from that pinned commit by `.github/workflows/build-driver.yml`:
+
+    sudo dnf config-manager addrepo \
+        --from-repofile=https://aquarat.github.io/got-bringup/honeykrisp-got.repo
+    sudo dnf install honeykrisp-got
+
+Installing changes nothing; `honeykrisp-got enable` is a separate step, because
+reaching a Steam game means replacing the Vulkan driver your compositor is also
+using. Read the first section of INSTALL.md before you do it.
 
 Or build it yourself: `./build-driver.sh`, then `./deploy-system-driver.sh deploy`.
 
@@ -56,6 +61,7 @@ compute time**, against roughly 15% before.
 | `mesa-source.env` | the Mesa fork, branch and commit the driver comes from |
 | `build-driver.sh` | clone that commit and build the driver from it |
 | `packaging/` | the RPM: spec, the `honeykrisp-got` tool, the CI build |
+| `packaging/SIGNING.md` | how to give the packages a signature, and what it is worth |
 | `autorun.sh` | unattended measurement run |
 | `reset-session.sh` | tear down a wedged muvm/Steam session |
 | `tests/` | standalone Vulkan tests that isolate one question each |
