@@ -98,7 +98,14 @@ https://github.com/aquarat/got-bringup/blob/main/INSTALL.md first.
 #
 # Keep this list identical to the one in got-bringup's build-driver.sh, so a
 # locally built driver and this package are the same binary configuration.
+#
+# --auto-features=auto undoes the --auto-features=enabled that Fedora's %%meson
+# macro passes. With it left on, meson tries to enable every optional feature it
+# can name, and the first one it reaches is the VA video state tracker, which
+# cannot be enabled without a gallium driver to hang it off. Nothing this package
+# ships is auto-detected, so 'auto' is both correct and the smaller change.
 %meson \
+    --auto-features=auto \
     -Dvulkan-drivers=asahi \
     -Dgallium-drivers= \
     -Dplatforms=x11,wayland \

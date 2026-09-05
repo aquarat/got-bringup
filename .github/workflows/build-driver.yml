@@ -47,7 +47,7 @@ jobs:
         fedora: ['${{ inputs.fedora_release || 44 }}']
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Build the RPM in a Fedora ${{ matrix.fedora }} container
         run: |
