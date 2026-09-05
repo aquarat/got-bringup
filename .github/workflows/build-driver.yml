@@ -1,0 +1,102 @@
+# Build a Fedora Asahi Remix package of the patched Honeykrisp driver.
+#
+# The driver source is NOT in this repository. It is the Mesa commit pinned in
+# mesa-source.env, which packaging/make-srpm.sh clones and exports. Moving that
+# pin is what produces a new package.
+#
+# Runs on GitHub's aarch64 runners inside a Fedora container, because the
+# package is for aarch64 and cross-building Mesa is not worth the trouble when
+# native runners are free for public repositories.
+
+name: build driver package
+
+on:
+  push:
+    branches: ['**']
+    paths:
+      - 'mesa-source.env'
+      - 'packaging/**'
+      - 'build-driver.sh'
+      - '.github/workflows/build-driver.yml'
+  pull_request:
+    paths:
+      - 'mesa-source.env'
+      - 'packaging/**'
+      - '.github/workflows/build-driver.yml'
+  workflow_dispatch:
+    inputs:
+      fedora_release:
+        description: 'Fedora release to build against'
+        default: '44'
+        type: string
+      publish:
+        description: 'Publish a GitHub release with the built packages'
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  rpm:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        fedora: ['${{ inputs.fedora_release || 44 }}']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build the RPM in a Fedora ${{ matrix.fedora }} container
+        run: |
+          docker run --rm \
+            -v "$PWD:/src" -w /src \
+            "registry.fedoraproject.org/fedora:${{ matrix.fedora }}" \
+            packaging/ci-build.sh
+
+      - name: What was built
+        run: |
+          sudo chown -R "$(id -u):$(id -g)" out
+          ls -la out
+          for f in out/*.rpm; do
+            echo "=== $f"
+            rpm -qip "$f" 2>/dev/null | sed 's/^/  /' || true
+          done
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: honeykrisp-got-fc${{ matrix.fedora }}
+          path: out/*.rpm
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish release
+        if: inputs.publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          # The release is named after the driver commit it contains, which is
+          # the only thing that identifies it. Re-running over the same pin
+          # updates that release rather than making a second one.
+          . ./mesa-source.env
+          tag="driver-${MESA_COMMIT:0:12}"
+          notes=$(mktemp)
+          {
+            echo "Honeykrisp Vulkan driver for Fedora Asahi Remix ${{ matrix.fedora }}, built from"
+            echo "\`$MESA_REPO\` \`$MESA_BRANCH\` at \`$MESA_COMMIT\`."
+            echo
+            echo "Installing changes nothing on its own. See [INSTALL.md](https://github.com/${GITHUB_REPOSITORY}/blob/main/INSTALL.md)."
+            echo
+            echo '```'
+            echo "sudo dnf install ./$(basename "$(ls out/honeykrisp-got-[0-9]*.aarch64.rpm | grep -v debug | head -1)")"
+            echo "sudo honeykrisp-got enable"
+            echo "honeykrisp-got user-config"
+            echo '```'
+          } > "$notes"
+          gh release create "$tag" out/*.rpm \
+            --title "honeykrisp-got ${MESA_COMMIT:0:12} (fc${{ matrix.fedora }})" \
+            --notes-file "$notes" || \
+          gh release upload "$tag" out/*.rpm --clobber

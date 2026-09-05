@@ -1,0 +1,196 @@
+# Generated from honeykrisp-got.spec.in by make-srpm.sh. Do not edit the
+# generated copy; edit the .in and re-run make-srpm.sh.
+
+# Mesa and LTO have a long history. Fedora's own mesa package does not use it
+# either, and this is not the place to find out why.
+%global _lto_cflags %{nil}
+
+%global mesa_commit  @MESA_COMMIT@
+%global mesa_short   @MESA_SHORT@
+%global privdir      %{_libdir}/honeykrisp-got
+
+Name:           honeykrisp-got
+Version:        @MESA_VERSION@~devel
+Release:        1.@SNAPDATE@git@MESA_SHORT@%{?dist}
+Summary:        Honeykrisp Vulkan driver with the Ghost of Tsushima dispatch-overlap fixes
+
+# Mesa is MIT; src/asahi and the changes in it are MIT.
+License:        MIT
+URL:            https://github.com/aquarat/got-bringup
+
+# Apple Silicon only. There is no meaning to this package anywhere else.
+ExclusiveArch:  aarch64
+
+Source0:        mesa-%{mesa_short}.tar.gz
+Source1:        honeykrisp-got
+Source2:        drirc-hk-vkd3d.conf
+Source3:        README.package.md
+
+BuildRequires:  gcc
+BuildRequires:  gcc-c++
+BuildRequires:  meson >= 1.4.0
+BuildRequires:  ninja-build
+BuildRequires:  bison
+BuildRequires:  flex
+BuildRequires:  python3-devel
+BuildRequires:  python3-mako
+BuildRequires:  python3-ply
+BuildRequires:  python3-pyyaml
+BuildRequires:  python3-packaging
+BuildRequires:  pkgconfig(libdrm)
+BuildRequires:  pkgconfig(expat)
+BuildRequires:  pkgconfig(zlib)
+BuildRequires:  pkgconfig(libzstd)
+BuildRequires:  pkgconfig(x11)
+BuildRequires:  pkgconfig(x11-xcb)
+BuildRequires:  pkgconfig(xcb)
+BuildRequires:  pkgconfig(xcb-dri3)
+BuildRequires:  pkgconfig(xcb-present)
+BuildRequires:  pkgconfig(xcb-randr)
+BuildRequires:  pkgconfig(xcb-shm)
+BuildRequires:  pkgconfig(xcb-sync)
+BuildRequires:  pkgconfig(xcb-xfixes)
+BuildRequires:  pkgconfig(xcb-keysyms)
+BuildRequires:  pkgconfig(xshmfence)
+BuildRequires:  pkgconfig(xrandr)
+BuildRequires:  pkgconfig(wayland-client)
+BuildRequires:  pkgconfig(wayland-scanner)
+BuildRequires:  pkgconfig(wayland-protocols)
+# mesa_clc: the Asahi driver's helper kernels are OpenCL C compiled at build time.
+BuildRequires:  llvm-devel
+BuildRequires:  clang-devel
+BuildRequires:  spirv-tools-devel
+BuildRequires:  spirv-llvm-translator-devel
+
+# The distro driver is what gets backed up and restored, so it has to be there.
+Requires:       mesa-vulkan-drivers
+Requires:       vulkan-loader
+# 'enable' refuses to deploy a driver that cannot enumerate the GPU, and that
+# check is vulkaninfo.
+Recommends:     vulkan-tools
+
+%description
+The Honeykrisp (Asahi) Vulkan driver built from a Mesa fork carrying two
+changes measured to cut Ghost of Tsushima's per-frame compute time by about
+4.1x on an M1 Max:
+
+  * independent compute dispatches are allowed to overlap, instead of a full
+    CDM barrier after every one of them; and
+  * shader constant tables are kept out of per-invocation scratch memory.
+
+This is a development build of Mesa %{version}, not a distro package. It does
+not replace anything on install: the driver is placed under %{privdir} and
+stays inert until you run
+
+    honeykrisp-got enable
+
+which swaps it for %{_libdir}/libvulkan_asahi.so and keeps the distro file as
+a backup. That path is the only one a Steam game actually reaches, and it is
+also the one your compositor uses -- read
+https://github.com/aquarat/got-bringup/blob/main/INSTALL.md first.
+
+%prep
+%autosetup -n mesa-%{mesa_short}
+
+%build
+# Only the Asahi Vulkan driver. libvulkan_asahi.so is a self-contained ICD; no
+# GL, gallium, or video codec in this package is ever loaded.
+#
+# Keep this list identical to the one in got-bringup's build-driver.sh, so a
+# locally built driver and this package are the same binary configuration.
+%meson \
+    -Dvulkan-drivers=asahi \
+    -Dgallium-drivers= \
+    -Dplatforms=x11,wayland \
+    -Dopengl=false \
+    -Dgles1=disabled \
+    -Dgles2=disabled \
+    -Dglx=disabled \
+    -Degl=disabled \
+    -Dgbm=disabled \
+    -Dglvnd=disabled \
+    -Dvideo-codecs= \
+    -Dtools= \
+    -Dvulkan-layers= \
+    -Dbuild-tests=false \
+    -Dllvm=enabled \
+    -Dshared-llvm=enabled \
+    -Dxmlconfig=enabled \
+    -Dshader-cache=enabled
+%meson_build
+
+%install
+# Install to a staging root first and take only the ICD out of it. Installing
+# straight into the buildroot would put libvulkan_asahi.so at the same path
+# mesa-vulkan-drivers owns, and RPM would refuse the package. The whole design
+# here is that the swap is a deliberate act, not a side effect of dnf install.
+stageroot=%{_builddir}/honeykrisp-stageroot
+rm -rf "$stageroot"
+DESTDIR="$stageroot" %{__meson} install -C %{_vpath_builddir} --no-rebuild --quiet
+
+install -D -m 0755 "$stageroot"%{_libdir}/libvulkan_asahi.so \
+    %{buildroot}%{privdir}/libvulkan_asahi.so
+
+# An ICD manifest pointing at the private copy, for
+# "honeykrisp-got test" and for VK_DRIVER_FILES experiments. It is deliberately
+# NOT installed into %%{_datadir}/vulkan/icd.d: a second manifest there would
+# make every Vulkan application on the machine enumerate two Apple GPUs, and
+# which one it picked would be luck.
+mkdir -p %{buildroot}%{_datadir}/honeykrisp-got
+sed -e 's|"library_path"\( *\): *"[^"]*"|"library_path"\1: "%{privdir}/libvulkan_asahi.so"|' \
+    "$stageroot"%{_datadir}/vulkan/icd.d/asahi_icd.aarch64.json \
+    > %{buildroot}%{_datadir}/honeykrisp-got/asahi_icd.aarch64.json
+grep -q '%{privdir}' %{buildroot}%{_datadir}/honeykrisp-got/asahi_icd.aarch64.json
+
+# The vkd3d/DXVK driconf profile. Honeykrisp ships it upstream but Fedora's mesa
+# package does not, and the driver only looks in DATADIR/drirc.d -- which is not
+# visible inside the pressure-vessel namespace the game runs in. So it is not
+# installed system-wide; "honeykrisp-got user-config" puts it in $HOME/.drirc,
+# which is shared through into muvm and parsed unconditionally.
+install -m 0644 %{SOURCE2} %{buildroot}%{_datadir}/honeykrisp-got/drirc-hk-vkd3d.conf
+
+sed -e 's|%%LIBDIR%%|%{_libdir}|g' \
+    -e 's|%%DATADIR%%|%{_datadir}|g' \
+    -e 's|%%LOCALSTATEDIR%%|%{_localstatedir}|g' \
+    %{SOURCE1} > honeykrisp-got.tool
+install -D -m 0755 honeykrisp-got.tool %{buildroot}%{_bindir}/honeykrisp-got
+
+install -D -m 0644 %{SOURCE3} %{buildroot}%{_docdir}/%{name}/README.md
+install -d -m 0755 %{buildroot}%{_localstatedir}/lib/%{name}
+
+%check
+# The driver cannot be exercised here -- no GPU in a build container -- but a
+# missing DT_SONAME or an unresolved symbol is worth catching before a user
+# swaps this in front of their compositor.
+test -f %{buildroot}%{privdir}/libvulkan_asahi.so
+readelf -d %{buildroot}%{privdir}/libvulkan_asahi.so | grep -q NEEDED
+bash -n %{buildroot}%{_bindir}/honeykrisp-got
+
+# Anything reinstalling the distro driver -- a mesa update, a dnf reinstall --
+# silently undoes 'enable'. Without this the user's frame rate would halve on a
+# routine dnf upgrade with nothing to explain it. Only fires if they enabled it.
+%transfiletriggerin -- %{_libdir}/libvulkan_asahi.so
+if [ -f %{_localstatedir}/lib/%{name}/enabled ]; then
+    %{_bindir}/honeykrisp-got reapply || :
+fi
+
+%preun
+# Uninstalling the package must not leave its driver in front of the system one.
+if [ $1 -eq 0 ]; then
+    %{_bindir}/honeykrisp-got disable --quiet || :
+fi
+
+%files
+%license licenses/MIT
+%doc %{_docdir}/%{name}/README.md
+%{_bindir}/honeykrisp-got
+%dir %{privdir}
+%{privdir}/libvulkan_asahi.so
+%dir %{_datadir}/honeykrisp-got
+%{_datadir}/honeykrisp-got/asahi_icd.aarch64.json
+%{_datadir}/honeykrisp-got/drirc-hk-vkd3d.conf
+%dir %{_localstatedir}/lib/%{name}
+
+%changelog
+* @RPMDATE@ got-bringup CI <noreply@github.com> - @MESA_VERSION@~devel-1.@SNAPDATE@git@MESA_SHORT@
+- Built from %{url} pin mesa @MESA_COMMIT@
