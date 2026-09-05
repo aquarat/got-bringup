@@ -3137,6 +3137,16 @@ dependent chain, so the 80 us arithmetic was fantasy. Two hypotheses died here
 -- that the preamble is expensive, and that it is expensive specifically for
 small dispatches.
 
+> **Corrected after review (item 45).** The table above was taken with dispatch
+> overlap ON, so its 200 dispatches per row ran concurrently and the figures
+> are throughput, not latency -- an expensive preamble hidden by concurrency
+> would have looked exactly like this. Re-run serialised
+> (`HK_PERFTEST=nooverlap`): 16.18 us per dispatch at one workgroup and 16.24
+> at 256, against 16.38 / 16.49 with `AGX_MESA_DEBUG=nopreamble`. The
+> serialised cost is the full-barrier floor of one dispatch, the same with or
+> without the preamble, so the preamble is not resolvable inside it. The
+> conclusion survives; the evidence it rested on did not.
+
 ### The bug the experiment exposed
 
 `AGX_MESA_DEBUG=nopreamble` on the game measured 18.28 fps / 25.93 ms of
@@ -3182,3 +3192,75 @@ AGX_MESA_DEBUG silently poisoned every subsequent run on the machine. Several
 earlier items in this file used `AGX_MESA_DEBUG=shaders`; those were dumps
 rather than codegen changes, so their conclusions stand, but the hazard was
 live for the whole project.
+
+---
+
+## Item 45 — external review of the pushed branches, and what was done about it
+
+Two independent reviewers were asked to pull `aquarat/mesa` (`local-deploy`)
+and `aquarat/got-bringup` cold and be critical. Their reports are summarised
+here with the disposition of each finding. Driver fixes are in mesa
+`13f72b3369c`.
+
+### Driver findings acted on
+
+| finding | verdict | fix |
+|---|---|---|
+| Profiler shader table dereferenced `agx_shader_info *` at report time; the owning pipeline can be destroyed first (use-after-free) | correct | stats, blake3, workgroup and stage copied into the entry at claim; pointer is identity only |
+| Profiler probed with a NULL key from depth-only draws and corrupted a free slot | correct | fixed earlier in `efa8875ca68` |
+| Subqueue-overlap hole A: `cross_dep_pending` never crosses a command-buffer boundary, so vkd3d-proton's end-of-list barrier set a flag nothing consumed | correct | first stream of each type in EVERY submitted buffer now waits across |
+| Subqueue-overlap hole B: `hk_optimize_empty_vdm` moves a LOAD_OP_CLEAR-only pass onto the compute subqueue behind the stage classifier's back | correct | the rewritten pass is marked as a cross dependency both ways |
+| `nooverlap` + `AGX_BARRIER_NONE` tessellate emitted no barrier block at all, the exact state the overlap path avoids | correct | `nooverlap` now flushes there too |
+| Code comment claimed the barrier block is required for sequencing; the hang it was inferred from was later attributed elsewhere and `noflush` measured no change | correct | comment reworded: conservative choice, not an established requirement |
+| Constant-data BO allocation failure left `data_addr` at 0 and the shader reading an unwritten uniform | correct | `hk_upload_shader` returns `VkResult`; both callers propagate |
+| `iadd(amul)` bounds path: a negative 32-bit constant would saturate the limit to 0 | probably unreachable, guard is free | guarded |
+| Cache key shift-XORed three inputs, so ASAHI_MESA_DEBUG bit 17 aliased AGX_MESA_DEBUG bit 1 | correct | every input FNV-mixed |
+| `[hk] HK_PERFTEST active` printed on every device creation | correct | gated on the variable being set |
+| Stale "deliberately coarse" comment contradicted by the code beneath it; unused `dev` parameter; dead ternary | correct | removed |
+
+### Driver findings NOT acted on
+
+* **Timestamp ring reuse can pair an old start with a new end** ("lost, not
+  corrupted" called optimistic). Plausible; the profiler is a local instrument
+  and the harness discards windows that fail its sanity gates. Recorded, not
+  fixed.
+* **Threshold 16 for `nir_opt_large_constants` "more aggressive than the 32
+  every other Mesa Vulkan driver uses".** Not so: RADV also uses 16. Left.
+* **Upstreamability**: commit messages and comments are essays, env knobs are
+  raw `getenv`. Agreed, and out of scope for a local branch.
+* **"Dangerous-by-default" weak barrier**: it is legal per the spec, and the
+  trade-off against applications that omit UAV barriers is deliberate. Stated
+  here so nobody mistakes it for an oversight.
+
+### Validation of the fix commit
+
+`tests/bigconst`, `tests/robtest`, `tests/statetest` pass. CTS against the
+build, versus the runs recorded before it:
+
+| subset | pass | fail |
+|---|---|---|
+| `dEQP-VK.synchronization.*` | 14282 | 0 |
+| `dEQP-VK.robustness.*` | 22762 | 0 |
+| `dEQP-VK.compute.*` | 10736 | 0 |
+| `dEQP-VK.memory_model.*` | 2218 | 30, the same 30 image-payload/local-guard cases that fail without any of this work |
+
+`tests/ssboload2` reports FAIL, identically on the previously deployed driver:
+it is a load-throughput probe that borrowed `bigconst`'s checker without its
+table, not a correctness test, and has failed since it was written.
+
+### Harness findings acted on
+
+* `preambletest` measured throughput under overlap, not preamble latency
+  (item 44, corrected in place).
+* `README.md` did not say how the `.spv` files are built; `cstest.c` cited a
+  `build.sh` that does not exist; `coherence.c` said overlap needed enabling.
+* `cts-run.sh` was cited from three documents and absent from the repository.
+* `STATE.md`'s headline 3.8x / 7.5x is from unpinned runs and now says so;
+  its fragment row said "never investigated" while `data/fragment.md` exists.
+
+### Harness findings already handled before this item
+
+The menu-contaminated per-fix table, the tautological "internal consistency"
+argument, the unsupported 0.6%/0.08% reproducibility claim, and the unmeasured
+"4.1x together" were all withdrawn in `data/per-fix-results.md` (commit
+`4894131`) and `ablate.sh` implements the filter the reviewer could not find.

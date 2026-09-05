@@ -22,7 +22,23 @@
  * is roughly flat until the body starts to matter. If it dominates small
  * dispatches, one workgroup costs nearly as much as many.
  *
- * Build: cc -O2 -o preambletest preambletest.c -lvulkan
+ * CAVEAT (from review): the 200 dispatches per row are issued back to back,
+ * and since dispatch overlap became the driver default they RUN CONCURRENTLY.
+ * The per-dispatch figure is therefore a throughput, not a latency, and a
+ * preamble that was expensive but hidden by concurrency would look cheap.
+ * Run it serialised as well:
+ *
+ *    HK_PERFTEST=nooverlap ./preambletest
+ *    HK_PERFTEST=nooverlap AGX_MESA_DEBUG=nopreamble ./preambletest
+ *
+ * Measured 2026-09-05: overlapped 0.54 us at one workgroup; serialised 16.2 us
+ * at ANY workgroup count, and 16.4 us without the preamble. So the serialised
+ * cost is the full-barrier dispatch floor, and the preamble is not resolvable
+ * inside it either way. The conclusion stands, but on that evidence, not on
+ * the overlapped numbers.
+ *
+ * Build: glslangValidator -V preambletest.comp -o preambletest.spv
+ *        cc -O2 -o preambletest preambletest.c -lvulkan
  * Run:   ./preambletest            and    AGX_MESA_DEBUG=nopreamble ./preambletest
  */
 #include <stdio.h>

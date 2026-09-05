@@ -69,13 +69,18 @@ matched scene reproduces to 1-2%, and is the metric to trust.
 | `packaging/SIGNING.md` | how to give the packages a signature, and what it is worth |
 | `autorun.sh` | unattended measurement run |
 | `reset-session.sh` | tear down a wedged muvm/Steam session |
+| `cts-run.sh` | run a Vulkan CTS subset against a chosen driver build (see `CONFORMANCE.md`) |
 | `tests/` | standalone Vulkan tests that isolate one question each |
 | `runs/*/reports.txt` | the raw evidence behind every number quoted |
 
 ## Tests
 
 Each is a small standalone Vulkan program answering one question, built with
-`cc -O2 -o NAME NAME.c -lvulkan`:
+`cc -O2 -o NAME NAME.c -lvulkan`. Each loads its shader as `NAME.spv` from the
+current directory, and the `.spv` files are not committed; build them from the
+`.comp`/`.vert`/`.frag` next to each test with
+`glslangValidator -V NAME.comp -o NAME.spv` (`--target-env vulkan1.3`, which
+is the default, is what the tests request).
 
 | test | question |
 |---|---|

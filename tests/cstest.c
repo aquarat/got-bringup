@@ -12,7 +12,8 @@
  * shader below loops a runtime-supplied number of times, so the answer is
  * measured rather than assumed.
  *
- * Build: see build.sh next to it (needs glslangValidator).
+ * Build: glslangValidator -V cstest.comp -o cstest.spv
+ *        cc -O2 -o cstest cstest.c -lvulkan
  */
 #include <stdio.h>
 #include <stdlib.h>

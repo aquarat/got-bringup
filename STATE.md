@@ -3,6 +3,14 @@
 **Result: 5.84 -> 22.4 fps on the heavy scene (3.8x).** Compute time per frame
 134.4 -> 17.9 ms (7.5x).
 
+*Those two figures are the unpinned `baseline2` against `clean2`, taken before
+the dynamic-resolution hazard was understood, and are indicative only: the
+baseline run was almost certainly at a lower render resolution than the final
+one, so the ratios are a floor on the fps side and unknown on the compute side.
+The controlled per-fix figures are in `data/per-fix-results.md`; the nearest
+controlled stand-in for the unmodified driver there is the "dispatch overlap
+removed" arm (7.7 fps / 102.8 ms on the heavy scene, constant data still on).*
+
 Enabled by default in the local driver; just run `steam` through the wrapper.
 
 ## What each fix is worth
@@ -259,7 +267,7 @@ and found to be either genuine work or outside the driver.
 |---|---|---|---|
 | compute | 17.9 | memory-bound; top shader has full occupancy, 107 GPRs, no spills, no scratch, no loops | none obvious |
 | vertex | 7.8 | 95.9% genuine shading and tiling for 6886 draws/frame; an empty draw costs 47 ns | none |
-| fragment | 5.0 | never investigated in detail | unknown |
+| fragment | 5.0 | attributed per shader in `data/fragment.md` (29% coverage); no one shader dominates | none found |
 | the ~9.3 ms stall | 9.3 | not GPU, not the swapchain; most likely the game's CPU work under FEX | none |
 | ~5.1 ms of drain gaps | 5.1 | control stream boundaries | `csbarrier` measured: no effect |
 

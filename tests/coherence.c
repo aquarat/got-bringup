@@ -19,7 +19,8 @@
  * passing run proves nothing.
  *
  * Build: cc -O2 -o coherence coherence.c -lvulkan
- * Run:   ./coherence [iterations]      (needs HK_PERFTEST=overlap to matter)
+ * Run:   ./coherence [iterations]      (overlap is now the default; add
+ *        HK_PERFTEST=nooverlap to confirm every mask passes when serialised)
  */
 #include <stdio.h>
 #include <stdlib.h>
