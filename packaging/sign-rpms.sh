@@ -52,37 +52,83 @@ KEYFPR=$(gpg --list-secret-keys --with-colons | awk -F: '/^fpr:/ {print $10; exi
 UID_LINE=$(gpg --list-secret-keys --with-colons | awk -F: '/^uid:/ {print $10; exit}')
 echo "$PROG: signing with $KEYFPR  ($UID_LINE)"
 
-# Take the passphrase off this copy of the key.
+# Getting a passphrase-protected key to sign unattended under rpm 6.
 #
-# rpm 6 made the low-level signing macros parametric, so the %__gpg_sign_cmd /
+# rpm 6 made the low-level signing macros parametric, so the
 # %_gpg_sign_cmd_extra_args override that used to carry "--pinentry-mode
-# loopback --passphrase-file" is ignored outright. rpm then runs gpg with no way
-# to obtain a passphrase, gets nothing back, and exits 0 having signed nothing --
-# which is how this failed silently before.
+# loopback --passphrase-file" is ignored outright. rpm runs gpg its own way,
+# gets nothing back, and exits 0 having signed nothing -- which is how this
+# failed silently to begin with. So the passphrase has to be dealt with before
+# rpm is involved at all, and rpm's gpg call must then need no passphrase.
 #
-# Presetting the passphrase into gpg-agent would work, but needs
-# allow-preset-passphrase, the keygrip and a running agent. Stripping it is
-# simpler and costs nothing here: this is a throwaway GNUPGHOME inside an
-# ephemeral container, and the passphrase protects the key at rest on the
-# author's phone and in the GitHub secret -- not in this process, which was
-# handed the plaintext key in an environment variable a moment ago.
+# Two ways to get there, tried in that order:
+#   1. prime gpg-agent. One loopback signature unlocks the key and the agent
+#      caches it, so rpm's later plain gpg calls just work. The key is not
+#      modified.
+#   2. failing that, take the passphrase off this copy of the key. That is a
+#      throwaway keyring in an ephemeral container and this process was handed
+#      the plaintext key in an environment variable a moment ago, so it gives
+#      nothing away -- but it is still the bigger hammer, so it is second.
+
+cat > "$GNUPGHOME/gpg-agent.conf" <<CONF
+allow-loopback-pinentry
+default-cache-ttl 7200
+max-cache-ttl 7200
+CONF
+gpgconf --kill gpg-agent 2>/dev/null || :
+
+# Signs one byte and throws the signature away. With a passphrase argument it
+# unlocks the key and primes the agent; without one it answers the only question
+# that matters -- can gpg sign with no help, which is all rpm will give it.
+try_sign() {
+    if [ $# -eq 1 ]; then
+        printf preflight | gpg --batch --yes --pinentry-mode loopback \
+            --passphrase "$1" --local-user "$KEYFPR" \
+            --detach-sign --output /dev/null 2>&1
+    else
+        printf preflight | gpg --batch --yes --local-user "$KEYFPR" \
+            --detach-sign --output /dev/null 2>&1
+    fi
+}
+
 if [ -n "${RPM_GPG_PASSPHRASE:-}" ]; then
-    if ! gpg --batch --quiet --pinentry-mode loopback \
-             --passphrase "$RPM_GPG_PASSPHRASE" --new-passphrase '' \
-             --passwd "$KEYFPR" 2>/dev/null; then
-        echo "$PROG: could not unlock the key -- is RPM_GPG_PASSPHRASE right?" >&2
+    # A secret pasted into GitHub keeps whatever trailing newline came with it,
+    # and that newline is part of the passphrase as far as gpg is concerned.
+    PP_TRIMMED=$(printf '%s' "$RPM_GPG_PASSPHRASE" | tr -d '\r\n')
+    if out=$(try_sign "$RPM_GPG_PASSPHRASE"); then
+        PP="$RPM_GPG_PASSPHRASE"
+    elif out=$(try_sign "$PP_TRIMMED"); then
+        echo "$PROG: note: the passphrase worked only after trimming trailing whitespace"
+        PP="$PP_TRIMMED"
+    else
+        echo "$PROG: gpg will not unlock $KEYFPR with RPM_GPG_PASSPHRASE." >&2
+        printf '%s\n' "$out" | sed "s/^/$PROG:   /" >&2
+        echo "$PROG: check the secret matches the passphrase on the EXPORTED key." >&2
         exit 1
     fi
 fi
 
-# Prove gpg can sign without a terminal BEFORE handing the job to rpm, which
-# reports a signing failure as success.
-if ! echo preflight | gpg --batch --yes --quiet --local-user "$KEYFPR" \
-        --detach-sign --output /dev/null 2>&1; then
-    echo "$PROG: gpg cannot sign non-interactively with $KEYFPR" >&2
-    exit 1
+if ! out=$(try_sign); then
+    if [ -z "${PP:-}" ]; then
+        echo "$PROG: gpg cannot sign with $KEYFPR and no passphrase was given." >&2
+        printf '%s\n' "$out" | sed "s/^/$PROG:   /" >&2
+        exit 1
+    fi
+    echo "$PROG: gpg-agent did not retain the passphrase; removing it from this copy"
+    if ! out=$(gpg --batch --pinentry-mode loopback --passphrase "$PP" \
+                   --new-passphrase '' --passphrase-repeat 0 \
+                   --passwd "$KEYFPR" 2>&1); then
+        echo "$PROG: could not remove the passphrase either:" >&2
+        printf '%s\n' "$out" | sed "s/^/$PROG:   /" >&2
+        exit 1
+    fi
+    if ! out=$(try_sign); then
+        echo "$PROG: gpg still cannot sign unattended with $KEYFPR" >&2
+        printf '%s\n' "$out" | sed "s/^/$PROG:   /" >&2
+        exit 1
+    fi
 fi
-echo "$PROG: gpg signs non-interactively"
+echo "$PROG: gpg signs unattended; handing over to rpmsign"
 
 SIGN_ARGS=(
     # rpm 6 names the signer with %_openpgp_sign_id and picks the backend with
