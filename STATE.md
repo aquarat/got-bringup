@@ -7,35 +7,39 @@ Enabled by default in the local driver; just run `steam` through the wrapper.
 
 ## What each fix is worth
 
-Ablation at **pinned render resolution**, same build and session, each arm
-removing exactly one change. Full detail and the verification that each arm
-actually engaged: **`data/per-fix-results.md`**.
+**These numbers were corrected on 2026-09-05 after external review found the
+first set contaminated.** Full detail, including what was withdrawn and why:
+**`data/per-fix-results.md`**.
 
-| fix | fps | compute | commit |
-|---|---|---|---|
-| **Dispatch overlap** (CDM barrier) | **+34.5%** | **2.17x** | `df1874767e7`, `ba5fcc29756` |
-| — overlap at mask `0x1f` | +19.4% | 1.52x | `df1874767e7` |
-| — narrowing `0x1f` to `0x80` | +12.6% | 1.42x | `ba5fcc29756` |
-| **Constant tables out of scratch** | **+30.1%** | **1.88x** | `6a71e0feba7` |
-| Subqueue overlap | +0.7% (noise) | worse | `df2ad9e9ab6`, default OFF |
+Ablation at pinned render resolution, gameplay windows only, separated by
+scene. The fixes behave very differently in each, so a single number per fix
+is not honest:
 
-Reference (all fixes): **32.47 fps, 11.94 ms compute/frame, 14.77
-ns/invocation**. Removing dispatch overlap: 24.14 fps, 25.93 ms. Removing the
-constant-data pass: 24.96 fps, 22.47 ms.
+| fix | heavy scene | light scene |
+|---|---|---|
+| Dispatch overlap (CDM barrier) | **5.53x** compute | 1.45x compute |
+| — of which narrowing `0x1f` to `0x80` | 1.84x | negative, does not reproduce |
+| Constant tables out of scratch | **2.03x** compute | **2.70x** compute |
+| Subqueue overlap | noise | noise, default OFF |
 
-Together the two real fixes are worth about **4.1x on compute time**.
+Heavy scene reference, all fixes on: **21.5 fps, 18.60 ms compute/frame**.
+Without dispatch overlap: 7.7 fps, 102.81 ms.
 
 ## Measurement: read this before trusting any number here
 
-The game's dynamic resolution moves render resolution over a 4x range to hold
-30 fps, so **frame rate does not measure GPU efficiency** unless it is pinned.
-Two shader-cache-key bugs also let configuration changes silently no-op. All
-three are fixed or documented in `data/measurement-hazards.md`; with resolution
-pinned the harness reproduces to 0.6% on fps, against roughly 15% before.
+The game's dynamic resolution moves render resolution over a 4x range, so
+**frame rate does not measure GPU efficiency** unless it is pinned. Two shader
+cache key bugs also let configuration changes silently no-op. See
+`data/measurement-hazards.md`.
 
-Numbers taken before that work -- anything comparing fps or ms/frame between
-runs -- are indicative only. The per-shader comparisons at matched invocation
-counts were always sound.
+Even with resolution pinned, **frame rate does not reproduce reliably** --
+24% between identical runs on the light scene. Compute milliseconds per frame
+at a matched scene reproduces to 1-2% and is the metric to use. An earlier
+claim of 0.6%/0.08% reproducibility was measured wrongly and is withdrawn.
+
+Any figure in this repository comparing fps or ms/frame between runs that does
+not state both a matched resolution and a matched scene should be treated as
+indicative only.
 
 ## The frame today
 
@@ -76,8 +80,9 @@ emits a full CDM barrier after each one and prevents exactly that.
 Same work, no barriers between it: one dispatch of 64 groups takes 2.66 ms,
 the same work as 64 dispatches of 1 group takes 17.20 ms.
 
-Letting independent dispatches actually overlap is worth **2.5x frame rate**
-here. See `data/compute-breakdown.md` for where the remaining time goes.
+Letting independent dispatches actually overlap is worth **5.5x compute time**
+on the heaviest scene measured (102.8 -> 18.6 ms/frame); see
+`data/per-fix-results.md` for the per-scene breakdown. See `data/compute-breakdown.md` for where the remaining time goes.
 
 ## How it is implemented
 

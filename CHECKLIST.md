@@ -1761,6 +1761,11 @@ optimisation. Leave it off.
 
 ## THE ACTUAL FINDING: dynamic resolution is enabled and never engages
 
+> **SUPERSEDED (item 44).** True of that session only. Dynamic resolution does
+> engage in general, moving render resolution over a 4x range, which
+> invalidated a great many later fps comparisons until it was pinned. See
+> `data/measurement-hazards.md`.
+
 From the game's own log (`.../Documents/Ghost of Tsushima DIRECTOR'S CUT/
 Ghost of Tsushima DIRECTOR'S CUT.log`):
 

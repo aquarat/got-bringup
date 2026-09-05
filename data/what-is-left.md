@@ -50,7 +50,16 @@ work. If every remaining millisecond of GPU time vanished, the frame would
 still be ~10 ms, i.e. about 100 fps. That is the ceiling this stall imposes,
 and it is a long way above where we are.
 
-## Biggest remaining lever: the two subqueues never overlap
+## Cross-subqueue overlap — SUPERSEDED, it was measured and buys nothing
+
+**Everything in this section was written before the change was implemented and
+measured. It was, and it is worth nothing on this workload** -- see
+`subqueue-overlap.md` and `per-fix-results.md`. The analysis below is kept
+because the mechanism description is still accurate; the prize estimate is not.
+
+### (original text follows)
+
+## The two subqueues never overlap
 
 vertex 8.5 + fragment 5.1 + compute 19.1 = 32.7 ms, and the measured union is
 32.6 ms. **Nothing overlaps with anything.** On a tile-based deferred renderer

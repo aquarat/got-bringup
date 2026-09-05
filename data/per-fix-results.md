@@ -21,60 +21,104 @@ Three hazards had to be closed first (`measurement-hazards.md`):
    `noconstdata`, and reported the pass as worth 1.5% when it had not been
    disabled at all.
 
-With resolution pinned the harness became precise enough to be worth using:
-two independent runs of the same driver agree to **0.6% on fps and 0.08% on
-compute time**, against roughly 15% before.
+Pinning the resolution was necessary but NOT sufficient -- see the correction
+below. Compute milliseconds per frame at a matched scene reproduces to 1-2%;
+frame rate does not reproduce reliably at all.
 
-Every arm below is filtered to windows at exactly 808,832 invocations of
-`8c4c1c4aeb67`, which runs one invocation per pixel and so identifies the
-render resolution exactly. 42-47 windows per arm.
+Arms are filtered on two things: exactly 808,832 invocations of
+`8c4c1c4aeb67` (which runs one invocation per pixel, so it identifies the
+render resolution), AND at least 35 compute streams per frame (which excludes
+the menu). Results are then reported per scene, because one number per fix
+turned out to be an artifact of the window mix.
 
-## The arms
+## CORRECTION (2026-09-05, after external review)
 
-| arm | fps | compute ms/frame | GPU busy ms/frame | ns/invocation |
-|---|---|---|---|---|
-| **all fixes (reference)** | **32.47** | **11.94** | **18.63** | **14.77** |
-| − constant tables out of scratch | 24.96 | 22.47 | 28.81 | 27.78 |
-| − barrier mask `0x80` (back to `0x1f`) | 28.83 | 17.01 | 23.72 | 21.03 |
-| − dispatch overlap entirely | 24.14 | 25.93 | 30.64 | 32.06 |
-| + subqueue overlap | 32.70 | 12.38 | 19.43 | 15.30 |
+The first version of this document reported a single number per fix, filtered
+only on render resolution. **That filter was wrong and those numbers should not
+be used.** Pinning the resolution pinned it in the MENU too, so menu windows
+(90+ fps, ~5 ms compute) passed the filter -- between 31% and 53% of the frames
+behind each arm's figure. The old gameplay gate that excluded the menu was no
+longer being applied.
 
-## What each fix is worth
+Worse, "gameplay" is not one scene. Restricting to gameplay still averages over
+at least two, and the fixes behave very differently in each. **The per-fix
+numbers are therefore properties of the window mix, not of the fixes**, and the
+honest presentation is per scene.
 
-| fix | fps | compute | commit |
-|---|---|---|---|
-| **Dispatch overlap** (whole CDM barrier change) | **+34.5%** | **2.17x** | `df1874767e7`, `ba5fcc29756` |
-| — of which: overlap at mask `0x1f` | +19.4% | 1.52x | `df1874767e7` |
-| — of which: narrowing `0x1f` to `0x80` | +12.6% | 1.42x | `ba5fcc29756` |
-| **Constant tables out of scratch** | **+30.1%** | **1.88x** | `6a71e0feba7` |
-| Subqueue overlap | +0.7% (noise) | 0.96x (worse) | `df2ad9e9ab6`, default OFF |
+## The arms, corrected
 
-Together the two real fixes are worth about **4.1x on compute time**. They do
-not add linearly in frame rate because compute is only part of the frame.
+Filtered on BOTH matched resolution (808,832 invocations of `8c4c1c4aeb67`) AND
+gameplay (>= 35 compute streams per frame, which excludes the menu). Scenes are
+separated by streams per frame.
 
-### The decomposition is internally consistent
+### Heavy scene (54 streams/frame, n = 20-24 windows per arm)
 
-    no overlap        25.93 ms
-      -> overlap 0x1f 17.01 ms    1.52x
-      -> mask 0x80    11.94 ms    1.42x
-                                  -----
-      total                       2.17x     (1.52 x 1.42 = 2.16)
+| arm | fps | compute ms/frame |
+|---|---|---|
+| **all fixes** | **21.5** | **18.60** |
+| − constant tables out of scratch | 15.3 | 37.77 |
+| − barrier mask `0x80` (back to `0x1f`) | 16.2 | 34.13 |
+| − dispatch overlap entirely | 7.7 | 102.81 |
+| + subqueue overlap | 22.0 | 18.56 |
 
-Three separately measured runs agreeing arithmetically to 0.5% is not
-something noise produces. It is the best evidence available that these arms
-measure what they claim.
+### Light scene (43 streams/frame, n = 14 windows per arm)
 
-### Verification that each arm actually engaged
+| arm | fps | compute ms/frame |
+|---|---|---|
+| **all fixes** | **28.6** | **12.56** |
+| − constant tables out of scratch | 17.9 | 33.96 |
+| − barrier mask `0x80` | **33.2** | 13.34 |
+| − dispatch overlap entirely | 25.3 | 18.16 |
+| + subqueue overlap | 31.5 | 12.31 |
 
-A timing difference means nothing if the configuration did not change, which
-is exactly how the first attempt failed.
+## What each fix is worth — it depends on the scene
 
-* `noconstdata`: shader `6fc0efe726d2` goes from 1974 instructions, 119 GPRs,
-  832 occupancy, 0 spills, 0 scratch **to** 2540 instructions, 255 GPRs, 384
-  occupancy, 194:78 spills, 3104 bytes of scratch. Confirmed different code.
-* `mask1f`: wrapper reports 5 forwarded environment variables against 4.
-* `xoverlap`: measured overlap 1.52 ms against 0.00 ms, and 14% of compute and
-  28% of render commands submitted without a cross-subqueue wait against 0%.
+| fix | heavy scene | light scene |
+|---|---|---|
+| Dispatch overlap (whole CDM barrier change) | **5.53x** compute | 1.45x compute |
+| — of which narrowing `0x1f` to `0x80` | 1.84x compute | **negative** (see below) |
+| Constant tables out of scratch | 2.03x compute | 2.70x compute |
+| Subqueue overlap | ~1.00x (noise) | ~1.02x (noise) |
+
+Two things worth stating plainly:
+
+* **Dispatch overlap is worth far more than first reported** on the heavy
+  scene: 102.81 ms of compute per frame without it against 18.60 with, a 5.5x
+  difference, not the 2.17x the contaminated average gave.
+* **The mask narrowing does not reproduce in the light scene.** There `0x1f`
+  measured *faster* than `0x80` (33.2 against 28.6 fps, 13.34 against 12.56 ms
+  -- the two disagree in direction, which is itself a warning). n = 14 windows,
+  one run per arm. The heavy-scene result (1.84x) is the stronger of the two but
+  the honest position is that this fix is not cleanly measured.
+
+The previously published figures -- +34.5%/2.17x for overlap, +12.6%/1.42x for
+the mask, +30.1%/1.88x for constant data, and "4.1x together" -- are withdrawn.
+"4.1x" was in any case a product of two separately measured ratios, never
+measured directly; no arm exists with both fixes disabled.
+
+## Reproducibility: also overstated
+
+The claim of "0.6% on fps and 0.08% on compute" came from comparing two runs
+under the contaminated filter, one of which was later superseded. Measured
+properly, from `pintest` against `p-final` (same driver, same settings):
+
+| | heavy scene | light scene |
+|---|---|---|
+| compute ms/frame | 18.71 vs 18.60 (0.6%) | 12.28 vs 12.56 (2.3%) |
+| fps | 21.8 vs 21.5 (1.4%) | 37.7 vs 28.6 (**24%**) |
+
+So: **compute-milliseconds-per-frame at a matched scene reproduces to roughly
+1-2%. Frame rate does not reproduce reliably** -- the light scene varies 24%
+between identical runs, presumably because it is less GPU-bound and therefore
+more exposed to the ~9 ms non-GPU stall. Use compute ms/frame, not fps.
+
+## A tautology that was presented as evidence
+
+The original document argued that the decomposition was "internally consistent"
+because 1.52 x 1.42 = 2.16 against a measured 2.17, and called that independent
+corroboration. It is not: those ratios were computed from the same three
+measurements, so the identity holds by construction and cannot fail. That
+argument is withdrawn.
 
 ## Subqueue overlap: a correction
 

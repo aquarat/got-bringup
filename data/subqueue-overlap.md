@@ -101,4 +101,6 @@ Remove the dependency rather than the barrier:
   are lowered by clamping the index buffer in a pre-pass. `hk_shader.c:342`
   has a TODO about doing bounds in the shader instead (`iadd(amul)`), which
   would delete the pre-pass and the dependency with it.
-* Tessellation emulation is inherent to AGX having no hardware tessellator.
+* Tessellation is currently emulated in compute. Note that `TESSELLATION.md`
+  corrects an earlier belief that AGX has no hardware tessellator -- it appears
+  to have one, unused. That is a much larger piece of work than anything here.

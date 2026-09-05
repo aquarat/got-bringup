@@ -4,14 +4,18 @@ Making *Ghost of Tsushima DIRECTOR'S CUT* run efficiently on an Apple M1 Max
 under Fedora Asahi Remix, through muvm + FEX + Proton + vkd3d-proton on the
 **Honeykrisp** Vulkan driver.
 
-**Result: compute time per frame reduced ~4.1x**, from two driver changes in
-Mesa. See `STATE.md` for where things stand and `data/per-fix-results.md` for
-what each change is worth on its own.
+**Result: on the heaviest scene measured, GPU compute time per frame fell from
+102.8 ms to 18.6 ms** — about 5.5x — from two driver changes in Mesa.
 
-| fix | fps | compute |
+| fix | heavy scene | light scene |
 |---|---|---|
-| Dispatch overlap (weak CDM barrier) | +34.5% | 2.17x |
-| Constant tables out of per-invocation scratch | +30.1% | 1.88x |
+| Dispatch overlap (weak CDM barrier) | 5.53x compute | 1.45x |
+| Constant tables out of per-invocation scratch | 2.03x compute | 2.70x |
+
+The gains are strongly scene-dependent, so a single headline number would be
+misleading. `data/per-fix-results.md` gives the per-scene breakdown, and
+documents an earlier set of figures that were withdrawn after review found the
+filter was admitting menu frames.
 
 The driver changes live in a separate repository (a Mesa fork); this one holds
 the measurement harness, the tests, and the written record. `mesa-source.env`
@@ -47,8 +51,9 @@ conclusions that had to be retracted:
 * **`HK_PERFTEST` was missing too** — an ablation reported a pass as worth 1.5%
   when it had not been disabled at all.
 
-With resolution pinned the harness reproduces to **0.6% on fps and 0.08% on
-compute time**, against roughly 15% before.
+Even with resolution pinned, **frame rate does not reproduce reliably** — 24%
+between identical runs on a light scene. Compute milliseconds per frame at a
+matched scene reproduces to 1-2%, and is the metric to trust.
 
 ## Layout
 

@@ -39,7 +39,12 @@ Fixed in `c72c9e345aa`. Before that, one run with
 the ordinary key and every later run picked them up, looking exactly like a
 44% driver regression. See CHECKLIST item 44.
 
-## 3. Scene content varies even at a matched stream count
+## 3. HK_PERFTEST was not in the shader cache key either
+
+Fixed in `551b3415ffe`. Same bug as hazard 2, one variable over: an ablation
+reported a pass as worth 1.5% when the flag had not disabled it at all.
+
+## 4. Scene content varies even at a matched stream count
 
 `runs/norobust` and `runs/robctl`, both restricted to 44 compute streams per
 frame, differ by 22.56 against 29.07 fps. The stream count identifies the scene
@@ -49,6 +54,10 @@ frame rates a few percent apart.
 ## The rule that follows
 
 The harness can measure a 2x change. It cannot measure a 5% change.
+
+And even a matched resolution is not a matched scene: the menu is pinned too,
+and "gameplay" spans at least two scenes in which the same fix can differ by
+3x. Filter on resolution AND streams-per-frame, then report per scene.
 
 For anything smaller, do not use frame rate or per-frame milliseconds. Use:
 
@@ -90,8 +99,13 @@ pixels at a constant frame rate. That is not hypothetical here:
 | `xoverlap2` | 22.21 | 18.3 | 740,525 | 24.77 |
 
 Two independent pairs: identical frame rate, identical compute time, and
-13-27% more pixels with subqueue overlap enabled. The gain was real and the
-frame rate hid it.
+13-27% more pixels with subqueue overlap enabled.
+
+**SUPERSEDED.** This was read at the time as a real gain the frame rate had
+hidden. Measured again at pinned resolution it vanishes -- see
+`per-fix-results.md`. The extra pixels were the resolution controller landing
+somewhere different between runs, i.e. correlation, not causation. Subqueue
+overlap is worth nothing measurable on this workload and is default OFF.
 
 ### Switching it off
 
