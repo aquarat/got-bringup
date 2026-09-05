@@ -36,6 +36,8 @@ on:
 
 permissions:
   contents: write
+  # to hand off to the dnf-repo workflow after a publish
+  actions: write
 
 jobs:
   rpm:
@@ -148,6 +150,10 @@ jobs:
       # be rebuilt after one changes. The release event does that on its own;
       # this is here for the case where the release already existed and only
       # its assets were replaced, which does not fire one.
+      #
+      # This is best-effort: workflow_dispatch only reaches workflows that exist
+      # on the default branch, so it does nothing until this lands on main. The
+      # release event covers the normal case anyway.
       - name: Rebuild the dnf repository
         if: inputs.publish
         env:

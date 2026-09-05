@@ -43,7 +43,10 @@ instead of leaving you on whatever you downloaded once:
         --from-repofile=https://aquarat.github.io/got-bringup/honeykrisp-got.repo
     sudo dnf install honeykrisp-got
 
-On Fedora 40 and older that is `dnf config-manager --add-repo <url>`.
+On Fedora 40 and older that is `dnf config-manager --add-repo <url>`. Either way
+it just writes `/etc/yum.repos.d/honeykrisp-got.repo`, so
+`sudo curl -fsSLo /etc/yum.repos.d/honeykrisp-got.repo <url>` does the same
+thing with nothing installed.
 
 Or grab a single `honeykrisp-got-*.aarch64.rpm` from
 [Releases](https://github.com/aquarat/got-bringup/releases):

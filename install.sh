@@ -61,11 +61,12 @@ fi
 
 if [ "$MODE" = repo ]; then
     echo "==> adding the honeykrisp-got repository"
-    # dnf5 (Fedora 41+) renamed this. Try the new spelling, fall back to the old.
-    sudo dnf -y install 'dnf5-command(config-manager)' 2>/dev/null ||
-        sudo dnf -y install dnf-plugins-core
-    sudo dnf config-manager addrepo --overwrite --from-repofile="$REPO_URL/honeykrisp-got.repo" 2>/dev/null ||
-        sudo dnf config-manager --add-repo "$REPO_URL/honeykrisp-got.repo"
+    # Write the file directly rather than going through config-manager. That is
+    # all config-manager does with a --from-repofile URL, and its spelling
+    # changed between dnf4 and dnf5 ("--add-repo" vs "addrepo --from-repofile"),
+    # so this works on both and on a system where the plugin is not installed.
+    sudo curl -fsSL -o /etc/yum.repos.d/honeykrisp-got.repo \
+        "$REPO_URL/honeykrisp-got.repo"
 
     echo "==> installing"
     sudo dnf install -y honeykrisp-got

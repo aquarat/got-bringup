@@ -16,7 +16,7 @@ name: dnf repository
 
 on:
   release:
-    types: [published, edited, deleted, released]
+    types: [published, edited, deleted]
   workflow_dispatch:
 
 permissions:
