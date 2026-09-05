@@ -17,6 +17,15 @@ name: dnf repository
 on:
   release:
     types: [published, edited, deleted]
+  # A workflow GitHub has never run is not registered, and an unregistered
+  # workflow cannot be dispatched -- so without a trigger that fires on the
+  # branch it is developed on, this one is unreachable until it reaches the
+  # default branch. Rebuilding the repository when its own generator changes is
+  # worth doing on its own account anyway.
+  push:
+    paths:
+      - 'packaging/make-dnf-repo.sh'
+      - '.github/workflows/dnf-repo.yml'
   workflow_dispatch:
 
 permissions:
