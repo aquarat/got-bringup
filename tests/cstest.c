@@ -19,6 +19,22 @@
 #include <stdlib.h>
 #include <string.h>
 #include <vulkan/vulkan.h>
+#include <time.h>
+
+/* WHY WALL CLOCK AND NOT JUST THE TIMESTAMP
+ * vkCmdWriteTimestamp2 under-reports compute GPU time on unfixed Honeykrisp --
+ * 240x on G13C, 3336x on G13D (183.5 ms of work reported as 0.055 ms). The
+ * driver fix is Mesa-fork commit 05187f07881. Until a driver carries it, the
+ * "ts ms" column is fiction, and anything reading it -- concurrency.sh reads
+ * exactly this column -- silently reports nonsense rather than failing. So
+ * time the submit-to-idle on the CPU as well, and print both: the wall column
+ * is always trustworthy, and the gap between the two measures the bug. */
+static double now_ms(void)
+{
+   struct timespec t;
+   clock_gettime(CLOCK_MONOTONIC, &t);
+   return t.tv_sec * 1.0e3 + t.tv_nsec / 1.0e6;
+}
 
 #define CHECK(x) do { VkResult _r = (x); if (_r != VK_SUCCESS) { \
     fprintf(stderr, "%s:%d: %s -> %d\n", __FILE__, __LINE__, #x, _r); \
@@ -163,8 +179,8 @@ int main(int argc, char **argv)
 
    struct { uint32_t loops, stride; } pc;
 
-   printf("%10s %10s %10s %12s %14s\n", "dispatches", "groups", "loops",
-          "gpu ms", "us/dispatch");
+   printf("%10s %10s %10s %12s %12s %14s\n", "dispatches", "groups", "loops",
+          "wall ms", "ts ms", "us/dispatch");
    struct { unsigned disp, groups, loops; } cases[] = {
       {  64,   1,     1 },
       {  64,   1,  1000 },
@@ -183,7 +199,8 @@ int main(int argc, char **argv)
       ncases = 1;
    }
    for (int rep = 0; rep < reps; rep++)
-   for (unsigned i = 0; i < ncases; i++) {
+   for (unsigned i = 0; i < ncases; i++)
+   for (int warm = 1; warm >= 0; warm--) {
       pc.loops = cases[i].loops;
       pc.stride = 64;
       CHECK(vkResetCommandPool(dev, cp, 0));
@@ -206,10 +223,12 @@ int main(int argc, char **argv)
          vkCmdDispatch(cb, cases[i].groups, 1, 1);
       if (use_ts) vkCmdWriteTimestamp2(cb, VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT, qp, 1);
       CHECK(vkEndCommandBuffer(cb));
+      double w0 = now_ms();
       CHECK(vkQueueSubmit(q, 1, &(VkSubmitInfo){
                .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
                .commandBufferCount = 1, .pCommandBuffers = &cb}, VK_NULL_HANDLE));
       CHECK(vkQueueWaitIdle(q));
+      double wall = now_ms() - w0;
       double ms = 0;
       if (use_ts) {
          uint64_t ts[2] = {0, 0};
@@ -217,8 +236,12 @@ int main(int argc, char **argv)
                                      VK_QUERY_RESULT_64_BIT | VK_QUERY_RESULT_WAIT_BIT));
          ms = (double)(ts[1] - ts[0]) * props.limits.timestampPeriod / 1.0e6;
       }
-      printf("%10u %10u %10u %12.3f %14.2f\n", cases[i].disp, cases[i].groups,
-             cases[i].loops, ms, ms * 1000.0 / cases[i].disp);
+      /* First run of a case pays pipeline compile and first-submit cost, which
+       * on a short case is larger than the case. Report the second. */
+      if (warm) continue;
+      printf("%10u %10u %10u %12.3f %12.3f %14.2f\n", cases[i].disp, cases[i].groups,
+             cases[i].loops, wall, ms, wall * 1000.0 / cases[i].disp);
+      fflush(stdout);
    }
    return 0;
 }

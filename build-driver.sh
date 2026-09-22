@@ -152,10 +152,31 @@ fi
 SO="$INSTALL/lib64/libvulkan_asahi.so"
 [ -f "$SO" ] || die "build produced no $SO"
 
+# The manifest meson installs is NOT usable for VK_DRIVER_FILES. Because the
+# build is configured with --prefix=/usr, meson writes the eventual install
+# path into it:
+#
+#     "library_path": "/usr/lib64/libvulkan_asahi.so"
+#
+# which is the DISTRO driver. Pointing VK_DRIVER_FILES at it loads stock
+# Honeykrisp and reports "Mesa 26.2.2" while appearing to work -- every
+# measurement taken through it silently describes the unpatched driver.
+# packaging/honeykrisp-got.spec.in rewrites this manifest for the same reason.
+#
+# Write a second manifest next to it that points at the binary just built.
+LOCAL_ICD="$INSTALL/share/vulkan/icd.d/asahi_icd.local.json"
+mkdir -p "$(dirname "$LOCAL_ICD")"
+printf '{"ICD":{"api_version":"1.4.359","library_arch":"64","library_path":"%s"},"file_format_version":"1.0.1"}\n' \
+    "$SO" > "$LOCAL_ICD" || die "could not write $LOCAL_ICD"
+grep -q "$INSTALL" "$LOCAL_ICD" || die "$LOCAL_ICD does not point into $INSTALL"
+
 echo
 echo "built: $SO"
 echo "  $(stat -c %s "$SO") bytes, from $(git -C "$MESA_LOCAL" log -1 --format=%h)"
 echo
 echo "Deploy it with:  $HERE/deploy-system-driver.sh deploy"
 echo "Or test it without touching the system:"
-echo "  VK_DRIVER_FILES=$INSTALL/share/vulkan/icd.d/asahi_icd.aarch64.json vulkaninfo --summary"
+echo "  VK_DRIVER_FILES=$LOCAL_ICD vulkaninfo --summary"
+echo
+echo "Check that line printed 'Mesa ${MESA_VERSION%.*}.x-devel', not the distro version:"
+echo "  a manifest naming /usr/lib64 silently loads the stock driver instead."
