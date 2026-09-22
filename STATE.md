@@ -69,6 +69,17 @@ Everything below is measured on an M1 Max under Fedora Asahi Remix 44, Ghost of
 Tsushima DIRECTOR'S CUT (Steam 2215430) via muvm + FEX + Proton + vkd3d-proton,
 on the Honeykrisp Vulkan driver reached through the FEX Vulkan thunk.
 
+**A second part and a second workload:** `data/g13d-results.md` repeats the
+measurements on an M1 Ultra (G13D, 48 cores, two dies, headless) and on
+`llama.cpp` serving a 27B model, where the dispatch-overlap fix is worth
+**11% of token generation** against a `nooverlap` control. The same 15,307
+CTS cases pass on G13D with a failure set identical to stock. The per-bit cost
+structure and the coherency bits reproduce exactly; the concurrency ceiling
+scales with core count (~2 dispatches per core, so "about 64" here is "about
+2N"). It also corrects the `~68 GB/s` streaming figure quoted below and fixes
+three bugs in this repository's own tooling, one of which silently measured
+the stock driver.
+
 ---
 
 ## The finding

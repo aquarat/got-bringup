@@ -62,6 +62,7 @@ matched scene reproduces to 1-2%, and is the metric to trust.
 | `INSTALL.md` | how to get the driver onto a machine that is not this one |
 | `STATE.md` | where the work stands; start here |
 | `data/` | the analysis: per-fix results, measurement hazards, what is left |
+| `data/g13d-results.md` | the same driver on an M1 Ultra, and on a workload that is not the game |
 | `CHECKLIST.md` | the full record, including every wrong turn and why it was wrong |
 | `mesa-source.env` | the Mesa fork, branch and commit the driver comes from |
 | `build-driver.sh` | clone that commit and build the driver from it |
